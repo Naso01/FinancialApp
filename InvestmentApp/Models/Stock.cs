@@ -1,0 +1,12 @@
+﻿namespace InvestmentApp.Models
+{
+    public class Stock
+    {
+        public int StockId { get; set; }
+        public string Symbol { get; set; }
+        public string CompanyName { get; set; }
+        public DateTime LastUpdated { get; set; }
+
+        public List<PortfolioHolding> PortfolioHoldings { get; set; }
+    }
+}
