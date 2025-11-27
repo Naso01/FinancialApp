@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Finnhub.Client;
 
 namespace InvestmentApp.Controllers
 {

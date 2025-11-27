@@ -7,6 +7,8 @@
         public string CompanyName { get; set; }
         public DateTime LastUpdated { get; set; }
 
+        public decimal Price { get; set; }
+
         public List<PortfolioHolding> PortfolioHoldings { get; set; }
     }
 }
