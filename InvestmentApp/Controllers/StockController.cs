@@ -1,9 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Finnhub;
 
 namespace InvestmentApp.Controllers
 {
-    public class APIController : Controller
+    public class StockController : Controller
     {
         public IActionResult Index()
         {

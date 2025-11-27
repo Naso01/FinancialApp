@@ -1,5 +1,7 @@
 using InvestmentApp.Models;
 using Microsoft.EntityFrameworkCore;
+using Finnhub.Client;
+
 
 namespace InvestmentApp
 {
@@ -8,11 +10,17 @@ namespace InvestmentApp
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            var apiKey = builder.Configuration["Finnhub:d4k9h0hr01qvpdoiqjhgd4k9h0hr01qvpdoiqji0"];
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
             options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+            builder.Services.AddSingleton(provider =>
+            {
+                var client = new FinnhubClient(apiKey);
+                return client;
+            });
 
             var app = builder.Build();
 
