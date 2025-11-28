@@ -1,6 +1,7 @@
-using InvestmentApp.Models;
-using Microsoft.EntityFrameworkCore;
 using Finnhub.Client;
+using InvestmentApp.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.EntityFrameworkCore;
 
 
 namespace InvestmentApp
@@ -19,7 +20,18 @@ namespace InvestmentApp
             
             builder.Services.AddHttpClient<StockService>();
 
+            // Cookie Authentication -  Nathan Serrano
+            builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(options =>
+                {
+                    options.LoginPath = "/Authentication/Login";     // redirect here when unauthorized
+                    options.LogoutPath = "/Authentication/Logout";
+                });
+
             var app = builder.Build();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
