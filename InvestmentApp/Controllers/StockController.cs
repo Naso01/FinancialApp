@@ -1,8 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using InvestmentApp.Models;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using InvestmentApp.Models;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace InvestmentApp.Controllers
@@ -19,8 +20,11 @@ namespace InvestmentApp.Controllers
         }
 
         // Display all portfolios for a user with live stock prices
-        public async Task<IActionResult> Index(int userId)
+        public async Task<IActionResult> Index()
         {
+            //Access UserID through cookies
+            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
             var user = await _context.Users
                 .Include(u => u.ChequingAccount)
                 .Include(u => u.Portfolios)
