@@ -1,0 +1,23 @@
+﻿@model InvestmentApp.Models.Portfolio
+
+<h2>Edit Portfolio</h2>
+
+<form method="post">
+
+    <div class="form-group">
+        <label>Portfolio Type</label>
+        <select name="type" class="form-control">
+    <option value="1" selected="@(Model.PortfolioType == PortfolioType.Managed)">
+        Managed
+    </option>
+
+    <option value="2" selected="@(Model.PortfolioType == PortfolioType.SelfDirected)">
+        SelfDirected
+    </option>
+</select>
+
+    </div>
+
+    <button class="btn btn-success mt-3" type="submit">Save</button>
+
+</form>

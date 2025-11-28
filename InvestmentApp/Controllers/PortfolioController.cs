@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using InvestmentApp.Models;
-using System.Linq;
-using System.Threading.Tasks;
 
 public class PortfolioController : Controller
 {
@@ -13,7 +11,6 @@ public class PortfolioController : Controller
         _context = context;
     }
 
-    
     public async Task<IActionResult> Index(int userId)
     {
         var user = await _context.Users
@@ -25,19 +22,24 @@ public class PortfolioController : Controller
 
         if (user == null) return NotFound();
 
-        ViewBag.User = user;
+        ViewBag.UserId = userId;
         return View(user.Portfolios);
     }
+    public IActionResult Create(int userId)
+    {
+        ViewBag.UserId = userId;
+        return View();
+    }
 
-    
     [HttpPost]
-    public async Task<IActionResult> CreatePortfolio(int userId, string name, PortfolioType type)
+    public async Task<IActionResult> Create(int userId, PortfolioType type)
     {
         var user = await _context.Users
             .Include(u => u.Portfolios)
             .FirstOrDefaultAsync(u => u.UserId == userId);
 
-        if (user == null) return NotFound();
+        if (user == null)
+            return NotFound();
 
         var portfolio = new Portfolio
         {
@@ -49,7 +51,46 @@ public class PortfolioController : Controller
         user.Portfolios.Add(portfolio);
         await _context.SaveChangesAsync();
 
-        return RedirectToAction("Index", new { userId });
+        return RedirectToAction("Index", new { userId = userId });
+    }
+
+
+    public async Task<IActionResult> Edit(int id)
+    {
+        var portfolio = await _context.Portfolios.FindAsync(id);
+        if (portfolio == null) return NotFound();
+
+        return View(portfolio);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Edit(int id, PortfolioType type)
+    {
+        var p = await _context.Portfolios.FindAsync(id);
+        if (p == null) return NotFound();
+
+        p.PortfolioType = type;
+
+        await _context.SaveChangesAsync();
+
+        return RedirectToAction("Index", new { userId = p.UserId });
+    }
+
+    public async Task<IActionResult> Delete(int id)
+    {
+        var portfolio = await _context.Portfolios
+            .Include(p => p.Holdings)
+            .FirstOrDefaultAsync(p => p.PortfolioId == id);
+
+        if (portfolio == null) return NotFound();
+
+        // delete holdings first
+        _context.PortfolioHoldings.RemoveRange(portfolio.Holdings);
+
+        _context.Portfolios.Remove(portfolio);
+        await _context.SaveChangesAsync();
+
+        return RedirectToAction("Index", new { userId = portfolio.UserId });
     }
 
     [HttpPost]
@@ -67,7 +108,7 @@ public class PortfolioController : Controller
         return RedirectToAction("Index", new { userId });
     }
 
-    
+
     [HttpPost]
     public async Task<IActionResult> WithdrawFunds(int userId, decimal amount)
     {

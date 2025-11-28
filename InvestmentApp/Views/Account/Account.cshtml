@@ -36,4 +36,7 @@ else
         <input type="hidden" name="userId" value="@Model.UserId" />
         <button type="submit" class="btn btn-danger">Delete Account</button>
     </form>
+
+    <a asp-controller="Portfolio" asp-action="Index" asp-route-userId="@Model.UserId">Manage Portfolios</a>
+
 }
