@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 
 
 namespace InvestmentApp.Models
@@ -12,11 +13,13 @@ namespace InvestmentApp.Models
     public class StockService
     {
         private readonly HttpClient _httpClient;
-        private readonly string _apiKey = "d4k9h0hr01qvpdoiqjhgd4k9h0hr01qvpdoiqji0";
+        private readonly string _apiKey;
+        private readonly IConfiguration _configuration;
 
-        public StockService(HttpClient httpClient)
+        public StockService(HttpClient httpClient, IConfiguration configuration)
         {
             _httpClient = httpClient;
+            _apiKey = configuration["Finnhub:ApiKey"];
         }
 
         // Get live quote for a stock (price only)

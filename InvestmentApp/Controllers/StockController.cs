@@ -83,7 +83,7 @@ namespace InvestmentApp.Controllers
         // SEARCH PAGE (GET)
         public async Task<IActionResult> Search()
         {
-            // *** MODIFICATION: Include Portfolios so user.Portfolios is not null ***
+            
             var userId = GetCurrentUserId();
 
             if (userId == null) return RedirectToAction("Login", "Authentication");
@@ -95,11 +95,11 @@ namespace InvestmentApp.Controllers
             ViewBag.User = user;
             ViewBag.UserId = user.UserId;
 
-            // *** WARNING: What if the user has no portfolios? ***
+            
             if (!user.Portfolios.Any())
             {
-                // Handle case where user has no portfolios (e.g., redirect to create one, or display error)
-                // For now, it will throw an exception in the view if no portfolio exists.
+               
+                
             }
 
             return View();
@@ -112,12 +112,12 @@ namespace InvestmentApp.Controllers
         public async Task<IActionResult> Search(string query)
         {
             // Retrieve the user to populate the Buy forms in the view
-            // *** MODIFICATION: Load user with Portfolios for the Buy button forms ***
+            
             var userId = GetCurrentUserId();
 
             if (userId == null)
             {
-                // Handle case where user is not found, perhaps redirect to login
+                
                 return RedirectToAction("Login", "Authentication");
             }
 
@@ -138,10 +138,12 @@ namespace InvestmentApp.Controllers
 
                 var stocks = new List<Stock>();
 
+                var firstResult = searchResults.FirstOrDefault();
+
                 foreach (var result in searchResults)
                 {
                     // Check if already in DB
-                    /*
+                    
                     var stock = await _context.Stocks.FirstOrDefaultAsync(s => s.Symbol == result.Symbol);
                     if (stock == null)
                     {
@@ -160,7 +162,7 @@ namespace InvestmentApp.Controllers
                     stock.Price = liveQuote.Price;
 
                     stocks.Add(stock);
-                    */
+                    
                 }
 
                 ViewBag.Results = stocks;
