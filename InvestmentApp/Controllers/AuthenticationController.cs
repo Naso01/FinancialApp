@@ -25,14 +25,22 @@ namespace InvestmentApp.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(string username, string password)
         {
-            var user = _context.Users
-                .FirstOrDefault(u => u.Email == username && u.Password == password);
+            var user = _context.Users.FirstOrDefault(u => u.Email == username);
 
             if (user == null)
             {
-                ViewBag.Error = "Invalid username or password.";
+                ViewBag.Error = "No account found with that email.";
+                ViewBag.ShowSignup = true;
                 return View();
             }
+
+            if (user.Password != password)
+            {
+                ViewBag.Error = "Incorrect password.";
+                ViewBag.ShowSignup = true;
+                return View();
+            }
+
 
             var claims = new List<Claim>
             {
