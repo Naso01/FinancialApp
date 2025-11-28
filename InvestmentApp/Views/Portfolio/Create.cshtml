@@ -8,6 +8,15 @@
         <input name="name" class="form-control" />
     </div>
 
+    <select id="type" name="type" class="form-select">
+    <option value="1">Self-Directed</option>
+
+    @if (!ViewBag.HasManagedPortfolio)
+    {
+        <option value="0">Managed</option>
+    }
+</select>
+
     <div class="form-group mt-3">
         <label>Portfolio Type</label>
         <select name="type" class="form-control">

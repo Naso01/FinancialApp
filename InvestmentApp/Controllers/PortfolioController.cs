@@ -25,9 +25,13 @@ public class PortfolioController : Controller
         ViewBag.UserId = userId;
         return View(user.Portfolios);
     }
-    public IActionResult Create(int userId)
+    public async Task<IActionResult> Create(int userId)
     {
+        var hasManaged = await _context.Portfolios
+            .AnyAsync(p => p.UserId == userId && p.PortfolioType == PortfolioType.Managed);
+
         ViewBag.UserId = userId;
+        ViewBag.HasManagedPortfolio = hasManaged;
         return View();
     }
 
@@ -40,6 +44,12 @@ public class PortfolioController : Controller
 
         if (user == null)
             return NotFound();
+
+        if (type == PortfolioType.Managed && user.Portfolios.Any(p=> p.PortfolioType == PortfolioType.Managed))
+        {
+            TempData["Error"] = "User already has a Managed Portfolio.";
+            return RedirectToAction("Create", new { userId });
+        }
 
         var portfolio = new Portfolio
         {
