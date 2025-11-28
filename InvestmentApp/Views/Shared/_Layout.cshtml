@@ -39,11 +39,18 @@
                     </ul>
 
                     <!-- Right navigation -->
+                    <!--Nathan Serrano-->
                     <ul class="navbar-nav">
                         @if (User.Identity.IsAuthenticated)
                         {
                             <li class="nav-item">
                                 <span class="navbar-text me-3">Welcome, @User.Identity.Name</span>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Account" asp-action="Index">My Account</a>
+                            </li>
+                            <li>
+                                <a class="nav-link text-dark">|</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-controller="Authentication" asp-action="Logout">Logout</a>
