@@ -21,9 +21,12 @@ namespace InvestmentApp.Controllers
   
         public IActionResult Account()
         {
-            var claim = User.FindFirst("UserId");
+            var claim = User.FindFirst(ClaimTypes.NameIdentifier);
             if (claim == null)
+            {
                 return RedirectToAction("Login", "Authentication");
+            }
+                
 
             int userId = int.Parse(claim.Value);
             var account = _accountService.GetAccount(userId);
