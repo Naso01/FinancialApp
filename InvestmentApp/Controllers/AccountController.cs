@@ -1,76 +1,80 @@
 ﻿using InvestmentApp.Models;
+using InvestmentApp.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
 namespace InvestmentApp.Controllers
 {
-    [Authorize] // Only logged-in users can access this controller
+    [Authorize]
     public class AccountController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly AccountService _accountService;
 
-        public AccountController(ApplicationDbContext context)
+        public AccountController(ApplicationDbContext context, AccountService accountService)
         {
             _context = context;
+            _accountService = accountService;
         }
 
-        // ACCOUNT HOME
+  
+        public IActionResult Account()
+        {
+            var claim = User.FindFirst("UserId");
+            if (claim == null)
+                return RedirectToAction("Login", "Authentication");
+
+            int userId = int.Parse(claim.Value);
+            var account = _accountService.GetAccount(userId);
+
+            return View(account);
+        }
+
         public IActionResult Index()
         {
-            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-
-            var user = _context.Users.FirstOrDefault(u => u.UserId == userId);
-
-            return View(user);
+            return RedirectToAction("Account");
         }
 
-        // EDIT (GET)
-        public IActionResult Edit()
-        {
-            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            var user = _context.Users.FirstOrDefault(u => u.UserId == userId);
-
-            return View(user);
-        }
-
-        // EDIT (POST)
         [HttpPost]
-        public IActionResult Edit(User updated)
+        public IActionResult CreateChequing(decimal balance)
         {
-            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            var user = _context.Users.First(u => u.UserId == userId);
+            var claim = User.FindFirst("UserId");
+            if (claim == null)
+                return RedirectToAction("Login", "Authentication");
 
-            user.FirstName = updated.FirstName;
-            user.LastName = updated.LastName;
-            user.Email = updated.Email;
+            int userId = int.Parse(claim.Value);
 
-            if (!string.IsNullOrEmpty(updated.Password))
-                user.Password = updated.Password;
+            _accountService.AddChequingAccount(userId, balance);
 
-            _context.SaveChanges();
-
-            return RedirectToAction("Index");
+            return RedirectToAction("Account");
         }
-
-        // DELETE (GET)
-        public IActionResult Delete()
-        {
-            return View();
-        }
-
-        // DELETE (POST)
         [HttpPost]
-        public IActionResult DeleteConfirmed()
+        public IActionResult EditAccount(decimal balance)
         {
-            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            var claim = User.FindFirst("UserId");
+            if (claim == null)
+                return RedirectToAction("Login", "Authentication");
 
-            var user = _context.Users.First(u => u.UserId == userId);
+            int userId = int.Parse(claim.Value);
 
-            _context.Users.Remove(user);
-            _context.SaveChanges();
+            _accountService.EditAccount(userId, balance);
 
-            // Log the user out after deleting
+            return RedirectToAction("Account");
+        }
+
+        [HttpPost]
+        public IActionResult DeleteAccount()
+        {
+            var claim = User.FindFirst("UserId");
+            if (claim == null)
+                return RedirectToAction("Login", "Authentication");
+
+            int userId = int.Parse(claim.Value);
+
+            _accountService.DeleteAccount(userId);
+
+            // also logout user
             return RedirectToAction("Logout", "Authentication");
         }
     }

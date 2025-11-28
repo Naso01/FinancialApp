@@ -1,0 +1,20 @@
+﻿<h2>Edit Portfolio</h2>
+
+<form method="post" asp-action="Edit">
+    <input type="hidden" name="id" value="@Model.PortfolioId" />
+
+    <div class="form-group mt-3">
+        <label>Portfolio Type</label>
+        <select name="type" class="form-control">
+            <option value="0" selected="@(Model.PortfolioType == PortfolioType.Managed)">Managed</option>
+            <option value="1" selected="@(Model.PortfolioType == PortfolioType.SelfDirected)">Self Directed</option>
+        </select>
+    </div>
+
+    <div class="form-group mt-3">
+        <label>Add Funds (from Chequing)</label>
+        <input name="amount" type="number" step="0.01" class="form-control" />
+    </div>
+
+    <button type="submit" class="btn btn-success mt-3">Save Changes</button>
+</form>

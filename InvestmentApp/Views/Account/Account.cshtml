@@ -1,0 +1,42 @@
+﻿@model ChequingAccount
+
+<h2>Your Bank Account</h2>
+
+@if (Model == null)
+{
+    <p>You do not have a chequing account yet.</p>
+
+    <form asp-action="CreateChequing" method="post">
+        <input type="hidden" name="userId" value="1" />
+        <label>Starting Balance:</label>
+        <input type="number" name="balance" step="0.01" />
+        <button type="submit" class="btn btn-success">Create Chequing Account</button>
+    </form>
+}
+
+else
+{
+    <p><strong>Account ID:</strong> @Model.ChequingAccountId</p>
+    <p><strong>Balance:</strong> @Model.Balance</p>
+
+    <!-- edit -->
+    <form asp-action="EditAccount" method="post">
+        <input type="hidden" name="userId" value="@Model.UserId" />
+
+        <label>Balance:</label>
+        <input type="number" name="balance" value="@Model.Balance" step="0.01" />
+
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+    </form>
+
+    <br />
+
+    <!-- delete -->
+    <form asp-action="DeleteAccount" method="post">
+        <input type="hidden" name="userId" value="@Model.UserId" />
+        <button type="submit" class="btn btn-danger">Delete Account</button>
+    </form>
+
+    <a asp-controller="Portfolio" asp-action="Index" asp-route-userId="@Model.UserId">Manage Portfolios</a>
+
+}

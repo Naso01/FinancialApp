@@ -40,12 +40,10 @@ namespace InvestmentApp.Controllers
                 ViewBag.ShowSignup = true;
                 return View();
             }
-
-
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, user.Email),
-                new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString())
+                new Claim("UserId", user.UserId.ToString()),
+                new Claim(ClaimTypes.Name, user.Email)
             };
 
             var identity = new ClaimsIdentity(
@@ -60,18 +58,15 @@ namespace InvestmentApp.Controllers
                 principal
             );
 
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Account", "Account");
         }
 
-        // GET: Logout
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-
             return RedirectToAction("Login");
         }
-    
-        //Sign up
+
         [HttpGet]
         public IActionResult SignUp()
         {
@@ -81,7 +76,6 @@ namespace InvestmentApp.Controllers
         [HttpPost]
         public IActionResult SignUp(string firstName, string lastName, string email, string password)
         {
-            // Check if email already exists
             var existing = _context.Users.FirstOrDefault(u => u.Email == email);
             if (existing != null)
             {
@@ -100,9 +94,7 @@ namespace InvestmentApp.Controllers
             _context.Users.Add(user);
             _context.SaveChanges();
 
-            // Auto-login after registration (optional)
             return RedirectToAction("Login");
         }
-
     }
 }
