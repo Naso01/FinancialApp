@@ -1,0 +1,12 @@
+﻿@model User
+
+<h2>Your Account</h2>
+
+<table class="table">
+    <tr><th>First Name</th><td>@Model.FirstName</td></tr>
+    <tr><th>Last Name</th><td>@Model.LastName</td></tr>
+    <tr><th>Email</th><td>@Model.Email</td></tr>
+</table>
+
+<a asp-action="Edit" class="btn btn-primary">Edit Account</a>
+<a asp-action="Delete" class="btn btn-danger">Delete Account</a>

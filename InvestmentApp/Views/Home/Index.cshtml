@@ -1,8 +1,74 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Home";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container mt-5">
+
+    <!-- HERO SECTION -->
+    <div class="p-5 mb-4 bg-light rounded-3 shadow-sm">
+        <div class="container-fluid py-5">
+            <h1 class="display-5 fw-bold">Welcome to InvestmentApp</h1>
+            <p class="fs-4 text-muted">
+                Track your investments, manage your portfolio, and stay in control of your financial future.
+            </p>
+
+            @if (!User.Identity.IsAuthenticated)
+            {
+                <a class="btn btn-primary btn-lg" asp-controller="Authentication" asp-action="Login">
+                    Get Started
+                </a>
+                <a class="btn btn-outline-secondary btn-lg ms-2" asp-controller="Authentication" asp-action="SignUp">
+                    Create an Account
+                </a>
+            }
+            else
+            {
+                <a class="btn btn-success btn-lg" asp-controller="Portfolio" asp-action="Index">
+                    Go to Dashboard
+                </a>
+            }
+        </div>
+    </div>
+
+    <!-- FEATURE CARDS -->
+    <h2 class="mb-4 fw-bold">What You Can Do</h2>
+    <div class="row g-4">
+
+        <div class="col-md-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <h4 class="card-title">Manage Your Portfolio</h4>
+                    <p class="card-text">
+                        View your assets, track performance, and make informed investment decisions.
+                    </p>
+                    <a asp-controller="Portfolio" asp-action="Index" class="btn btn-outline-primary">View Portfolio</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <h4 class="card-title">Chequing Account</h4>
+                    <p class="card-text">
+                        Monitor your balance and transaction history with ease.
+                    </p>
+                    <a asp-controller="Chequing" asp-action="Index" class="btn btn-outline-primary">Open Chequing</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <h4 class="card-title">Live Market Data</h4>
+                    <p class="card-text">
+                        Get real-time stock data powered by Finnhub.
+                    </p>
+                    <a asp-controller="Stock" asp-action="Index" class="btn btn-outline-primary">Browse Stocks</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
