@@ -7,7 +7,6 @@
             
             context.Database.EnsureCreated();
 
-           
             if (context.Users.Any())
             {
                 return; 

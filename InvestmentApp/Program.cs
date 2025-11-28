@@ -1,6 +1,7 @@
 using InvestmentApp.Models;
 using Microsoft.EntityFrameworkCore;
 using Finnhub.Client;
+using InvestmentApp.Services;
 
 
 namespace InvestmentApp
@@ -16,8 +17,14 @@ namespace InvestmentApp
             builder.Services.AddControllersWithViews();
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-            
+            builder.Services.AddSession();
+
             builder.Services.AddHttpClient<StockService>();
+
+            builder.Services.AddScoped<AccountService>();
+            builder.Services.AddScoped<PortfolioService>();
+            builder.Services.AddScoped<AdminService>();
+
 
             var app = builder.Build();
 
@@ -41,6 +48,7 @@ namespace InvestmentApp
             app.UseStaticFiles();
 
             app.UseRouting();
+            app.UseSession();
 
             app.UseAuthorization();
 

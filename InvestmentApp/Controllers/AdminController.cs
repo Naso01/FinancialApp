@@ -33,6 +33,7 @@ namespace InvestmentApp.Controllers
 
             //save cookie session
             HttpContext.Session.SetString("AdminLoggedIn", "true");
+            HttpContext.Session.SetString("AdminUsername", admin.Username);
 
             return RedirectToAction("Index");
         }
