@@ -5,7 +5,7 @@
 namespace InvestmentApp.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreateTwo : Migration
+    public partial class FixStockSchema : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

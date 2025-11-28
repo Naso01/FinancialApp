@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InvestmentApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251128011435_InitialCreateTwo")]
-    partial class InitialCreateTwo
+    [Migration("20251128013731_FixStockSchema")]
+    partial class FixStockSchema
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

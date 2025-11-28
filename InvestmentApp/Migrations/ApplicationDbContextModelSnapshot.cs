@@ -189,7 +189,7 @@ namespace InvestmentApp.Migrations
 
                     b.HasKey("UserId");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("InvestmentApp.Models.AdminRecommendation", b =>
