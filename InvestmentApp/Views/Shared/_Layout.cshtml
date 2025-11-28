@@ -56,6 +56,13 @@
                             <li class="nav-item">
                                 <span class="navbar-text me-3">Welcome, @User.Identity.Name</span>
                             </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="UserProfile" asp-action="Index">Edit Profile</a>
+                            </li>
+                            <li>
+                                <a class="nav-link text-dark">|</a>
+                            </li>
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-controller="Account" asp-action="Index">My Account</a>
                             </li>
