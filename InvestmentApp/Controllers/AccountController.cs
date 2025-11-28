@@ -25,8 +25,16 @@ namespace InvestmentApp.Controllers
                 return RedirectToAction("Login", "Authentication");
 
             int userId = int.Parse(claim.Value);
-            var account = _accountService.GetAccount(userId);
-            return View(account);
+
+            var chequing = _accountService.GetAccount(userId);
+            var savings = _accountService.GetSavingsAccount(userId);
+
+            if (savings != null)
+            {
+                ViewBag.Interest = _accountService.CalculateSavingsInterest(savings.Balance);
+                return View("Account", savings);
+            }
+            return View("Account", chequing);
         }
 
         public IActionResult Index()

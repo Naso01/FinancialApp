@@ -82,6 +82,18 @@ namespace InvestmentApp.Services
 
             return true;
         }
+        public SavingsAccount? GetSavingsAccount(int userId)
+        {
+            return _db.SavingsAccounts
+                .Include(s => s.Account)
+                .FirstOrDefault(s => s.UserId == userId);
+        }
+        public decimal CalculateSavingsInterest(decimal balance)
+        {
+            const decimal rate = 0.0125m;
+            return balance * rate;
+        }
+
 
         public bool AddFunds(int userId, decimal amount)
         {
@@ -114,23 +126,31 @@ namespace InvestmentApp.Services
 
         public bool DeleteAccount(int userId)
         {
-            // get the chequing account first
             var chequing = _db.ChequingAccounts.FirstOrDefault(a => a.UserId == userId);
-            if (chequing == null)
+            var savings = _db.SavingsAccounts.FirstOrDefault(a => a.UserId == userId);
+
+            if (chequing == null && savings == null)
                 return false;
 
-            // delete the Account entry that points to this chequing account
-            var accountRecord = _db.Accounts.FirstOrDefault(a => a.ChequingAccountId == chequing.ChequingAccountId);
-            if (accountRecord != null)
-                _db.Accounts.Remove(accountRecord);
+            if (chequing != null)
+            {
+                var acc = _db.Accounts.FirstOrDefault(a => a.ChequingAccountId == chequing.ChequingAccountId);
+                if (acc != null) _db.Accounts.Remove(acc);
 
-            // now delete the chequing account
-            _db.ChequingAccounts.Remove(chequing);
+                _db.ChequingAccounts.Remove(chequing);
+            }
+
+            if (savings != null)
+            {
+                var acc = _db.Accounts.FirstOrDefault(a => a.SavingsAccountId == savings.SavingsAccountId);
+                if (acc != null) _db.Accounts.Remove(acc);
+
+                _db.SavingsAccounts.Remove(savings);
+            }
 
             _db.SaveChanges();
             return true;
         }
-
 
     }
 }

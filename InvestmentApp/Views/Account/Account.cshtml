@@ -39,11 +39,21 @@
 }
 else
 {
-    <!-- existing account display -->
-
+    <!-- shared account -->
     <p><strong>Account Type:</strong> @Model.Account?.AccountType</p>
     <p><strong>Balance:</strong> @Model.Balance</p>
 
+    @* Savings interest display *@
+    @if (Model.Account?.AccountType == InvestmentApp.Models.AccountType.Savings)
+    {
+        <p class="text-success">
+            <strong>End-of-Year Interest (1.25%):</strong> @ViewBag.Interest.ToString("C")
+        </p>
+    }
+
+    <hr />
+
+    <!-- add funds -->
     <button class="btn btn-primary" onclick="toggleFunds()">Add Funds</button>
 
     <div id="fundsBox" style="display:none;" class="mt-3">
@@ -61,9 +71,15 @@ else
         }
     </script>
 
-    <!-- delete -->
+    <hr />
 
+    <!-- delete -->
     <form asp-action="DeleteAccount" method="post">
         <button class="btn btn-danger mt-3">Delete Account</button>
     </form>
+
+    <br />
+
+    <a asp-controller="Portfolio" asp-action="Index" asp-route-userId="@Model.UserId">Manage Portfolios</a>
+    <a asp-controller="Stock" asp-action="Index" asp-route-userId="@Model.UserId">Manage Stocks</a>
 }
