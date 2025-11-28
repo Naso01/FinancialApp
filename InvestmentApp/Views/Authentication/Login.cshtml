@@ -7,7 +7,17 @@
 @if (ViewBag.Error != null)
 {
     <div class="alert alert-danger">@ViewBag.Error</div>
+
+    if (ViewBag.ShowSignup == true)
+    {
+        <a asp-controller="Authentication"
+           asp-action="SignUp"
+           class="btn btn-secondary">
+            Create an Account
+        </a>
+    }
 }
+
 
 <form method="post" asp-controller="Authentication" asp-action="Login">
     <div class="form-group">
