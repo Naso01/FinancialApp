@@ -55,6 +55,9 @@ namespace InvestmentApp.Controllers
             );
 
             return RedirectToAction("Account", "Account");
+            HttpContext.Session.SetInt32("UserId", user.UserId);
+
+            return RedirectToAction("Index", "Home");
         }
 
         public async Task<IActionResult> Logout()

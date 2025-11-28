@@ -35,6 +35,13 @@ namespace InvestmentApp
             builder.Services.AddScoped<AdminService>();
 
 
+            builder.Services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(30); // optional, adjust session timeout
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
+
             var app = builder.Build();
 
             app.UseAuthentication();
@@ -62,11 +69,13 @@ namespace InvestmentApp
             app.UseRouting();
             app.UseSession();
 
+            app.UseSession();
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
+                pattern: "{controller=Authentication}/{action=Login}/{id?}");
 
             app.Run();
         }
