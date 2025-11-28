@@ -2,28 +2,26 @@
     int userId = ViewBag.UserId;
 }
 
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["Error"]
+    </div>
+}
+
 <form method="post" asp-action="Create" asp-route-userId="@userId">
-    <div class="form-group">
+    <div class="form-group mb-3">
         <label>Name</label>
-        <input name="name" class="form-control" />
+        <input name="name" class="form-control" placeholder="Enter portfolio name" required />
     </div>
 
-    <select id="type" name="type" class="form-select">
-    <option value="1">Self-Directed</option>
-
-    @if (!ViewBag.HasManagedPortfolio)
-    {
-        <option value="0">Managed</option>
-    }
-</select>
-
-    <div class="form-group mt-3">
+    <div class="form-group mb-3">
         <label>Portfolio Type</label>
-        <select name="type" class="form-control">
-            <option value="0">Managed</option>
-            <option value="1">SelfDirected</option>
+        <select id="type" name="type" class="form-select">
+            <option value="0">Self-Directed</option>
+            <option value="1">Managed</option>
         </select>
     </div>
 
-    <button type="submit" class="btn btn-primary mt-3">Create</button>
+    <button type="submit" class="btn btn-primary">Create</button>
 </form>

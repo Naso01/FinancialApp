@@ -38,6 +38,12 @@ public class PortfolioController : Controller
     [HttpPost]
     public async Task<IActionResult> Create(int userId, string name, PortfolioType type)
     {
+        if (string.IsNullOrWhiteSpace(name))
+        {
+            TempData["Error"] = "Please enter a portfolio name.";
+            return RedirectToAction("Create", new { userId });
+        }
+
         var user = await _context.Users
             .Include(u => u.Portfolios)
             .FirstOrDefaultAsync(u => u.UserId == userId);

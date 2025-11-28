@@ -1,4 +1,6 @@
-﻿namespace InvestmentApp.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace InvestmentApp.Models
 {
     public enum PortfolioType
     {
