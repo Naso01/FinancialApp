@@ -7,7 +7,7 @@
 
 <h2>Portfolios</h2>
 <p><strong>User:</strong> @user.FirstName @user.LastName</p>
-<p><strong>Balance:</strong> @user.ChequingAccount.Balance</p>
+<p><strong>Balance:</strong> @user.ChequingAccount.Balance.ToString("C")</p>
 
 @foreach (var portfolioEntry in Model)
 {
@@ -29,10 +29,10 @@
             </tr>
         </thead>
         <tbody>
-            @if (holdingsWithPrices.Count == 0)
+            @if (!holdingsWithPrices.Any())
             {
                 <tr>
-                    <td colspan="7">No holdings yet.</td>
+                    <td colspan="7" class="text-center">No holdings yet.</td>
                 </tr>
             }
             else
@@ -43,16 +43,16 @@
                         <td>@stock.CompanyName</td>
                         <td>@stock.Symbol</td>
                         <td>@holding.Quantity</td>
-                        <td>@holding.AvgPrice</td>
-                        <td>@stock.Price</td>
-                        <td>@(holding.Quantity * stock.Price)</td>
+                        <td>@holding.AvgPrice.ToString("C")</td>
+                        <td>@stock.Price.ToString("C")</td>
+                        <td>@(holding.Quantity * stock.Price).ToString("C")</td>
                         <td>
                             <form asp-action="SellStock" method="post">
                                 <input type="hidden" name="userId" value="@user.UserId" />
                                 <input type="hidden" name="portfolioId" value="@portfolio.PortfolioId" />
                                 <input type="hidden" name="stockId" value="@holding.StockId" />
-                                <input type="number" name="quantity" step="0.01" min="0" />
-                                <button type="submit" class="btn btn-danger btn-sm">Sell</button>
+                                <input type="number" name="quantity" step="0.01" min="0" class="form-control mb-1" />
+                                <button type="submit" class="btn btn-danger btn-sm w-100">Sell</button>
                             </form>
                         </td>
                     </tr>
@@ -63,6 +63,7 @@
 
     <h4>Buy New Stock</h4>
     <form asp-action="BuyStock" method="post">
+        @Html.AntiForgeryToken()
         <input type="hidden" name="userId" value="@user.UserId" />
         <input type="hidden" name="portfolioId" value="@portfolio.PortfolioId" />
         <div class="mb-2">
@@ -81,4 +82,10 @@
         <button type="submit" class="btn btn-primary">Buy</button>
     </form>
     <hr />
+
+    <p>
+        <a class="btn btn-primary" asp-controller="Stock" asp-action="Search">
+            Search Stocks
+        </a>
+    </p>
 }

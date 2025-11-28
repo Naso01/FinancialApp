@@ -31,13 +31,13 @@ namespace InvestmentApp.Controllers
             if (user == null)
             {
                 ViewBag.Error = "Invalid username or password.";
-                return View();
+                return View("Views/Authentication/Login");
             }
 
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, user.Email),
-                new Claim("UserId", user.UserId.ToString())
+                new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString())
             };
 
             var identity = new ClaimsIdentity(
@@ -51,6 +51,8 @@ namespace InvestmentApp.Controllers
                 CookieAuthenticationDefaults.AuthenticationScheme,
                 principal
             );
+
+            HttpContext.Session.SetInt32("UserId", user.UserId);
 
             return RedirectToAction("Index", "Home");
         }
