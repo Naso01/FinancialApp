@@ -6,6 +6,7 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 
+// Keegan Erdis
 
 namespace InvestmentApp.Models
 {
@@ -41,14 +42,14 @@ namespace InvestmentApp.Models
         // Get stock details for insertion into DB (symbol, company name, type)
         public async Task<StockDetails> GetStockDetailsAsync(string symbol)
         {
-            // Use Finnhub Search endpoint to get description/company name
+            // Use Finnhub Search to get description/company name
             var url = $"https://finnhub.io/api/v1/search?q={symbol}&token={_apiKey}";
             var response = await _httpClient.GetFromJsonAsync<FinnhubSearchResponse>(url);
 
             if (response == null || response.Result.Count == 0)
                 return null;
 
-            var result = response.Result[0]; // Take the first match
+            var result = response.Result[0]; // Take the first match (want to limit unnecessary Api calls)
             var quote = await GetStockAsync(result.Symbol);
 
             return new StockDetails
@@ -59,7 +60,7 @@ namespace InvestmentApp.Models
             };
         }
 
-        // Search stocks by query (for Search page)
+        // Search stocks 
         public async Task<List<FinnhubStock>> SearchStockAsync(string query)
         {
             var url = $"https://finnhub.io/api/v1/search?q={query}&token={_apiKey}";
@@ -69,7 +70,7 @@ namespace InvestmentApp.Models
         }
     }
 
-    // Models
+    // Additional Models
     public class StockQuote
     {
         public string Symbol { get; set; }

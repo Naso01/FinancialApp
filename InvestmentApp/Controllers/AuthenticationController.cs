@@ -42,23 +42,29 @@ namespace InvestmentApp.Controllers
             }
             var claims = new List<Claim>
             {
-                new Claim("UserId", user.UserId.ToString()),
+                new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
                 new Claim(ClaimTypes.Name, user.Email)
             };
 
             var identity = new ClaimsIdentity(
                 claims,
-                CookieAuthenticationDefaults.AuthenticationScheme
+                "Cookies"
             );
 
             var principal = new ClaimsPrincipal(identity);
 
             await HttpContext.SignInAsync(
-                CookieAuthenticationDefaults.AuthenticationScheme,
-                principal
-            );
+                "Cookies",
+                    principal,
+                    new AuthenticationProperties
+                    {
+        
+                        IsPersistent = true,
+                            ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(30) 
+                        }
+            ) ;
 
-            return RedirectToAction("Account", "Account");
+            return RedirectToAction("Index", "Home");
         }
 
         public async Task<IActionResult> Logout()

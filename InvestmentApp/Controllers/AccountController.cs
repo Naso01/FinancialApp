@@ -18,17 +18,23 @@ namespace InvestmentApp.Controllers
             _accountService = accountService;
         }
 
-  
         public IActionResult Account()
         {
-            var claim = User.FindFirst("UserId");
+            var claim = User.FindFirst(ClaimTypes.NameIdentifier);
             if (claim == null)
                 return RedirectToAction("Login", "Authentication");
 
             int userId = int.Parse(claim.Value);
-            var account = _accountService.GetAccount(userId);
 
-            return View(account);
+            var chequing = _accountService.GetAccount(userId);
+            var savings = _accountService.GetSavingsAccount(userId);
+
+            if (savings != null)
+            {
+                ViewBag.Interest = _accountService.CalculateSavingsInterest(savings.Balance);
+                return View("Account", savings);
+            }
+            return View("Account", chequing);
         }
 
         public IActionResult Index()
@@ -39,43 +45,63 @@ namespace InvestmentApp.Controllers
         [HttpPost]
         public IActionResult CreateChequing(decimal balance)
         {
-            var claim = User.FindFirst("UserId");
+            var claim = User.FindFirst(ClaimTypes.NameIdentifier);
             if (claim == null)
                 return RedirectToAction("Login", "Authentication");
 
             int userId = int.Parse(claim.Value);
-
             _accountService.AddChequingAccount(userId, balance);
+            return RedirectToAction("Account");
+        }
+
+        [HttpPost]
+        public IActionResult CreateSavings(decimal balance)
+        {
+            var claim = User.FindFirst(ClaimTypes.NameIdentifier);
+            if (claim == null)
+                return RedirectToAction("Login", "Authentication");
+
+            int userId = int.Parse(claim.Value);
+            _accountService.AddSavingsAccount(userId, balance);
 
             return RedirectToAction("Account");
         }
+
+
         [HttpPost]
         public IActionResult EditAccount(decimal balance)
         {
-            var claim = User.FindFirst("UserId");
+            var claim = User.FindFirst(ClaimTypes.NameIdentifier);
             if (claim == null)
                 return RedirectToAction("Login", "Authentication");
 
             int userId = int.Parse(claim.Value);
-
             _accountService.EditAccount(userId, balance);
+            return RedirectToAction("Account");
+        }
 
+        [HttpPost]
+        public IActionResult AddFunds(decimal amount)
+        {
+            var claim = User.FindFirst(ClaimTypes.NameIdentifier); 
+            if (claim == null)
+                return RedirectToAction("Login", "Authentication");
+
+            int userId = int.Parse(claim.Value);
+            _accountService.AddFunds(userId, amount);
             return RedirectToAction("Account");
         }
 
         [HttpPost]
         public IActionResult DeleteAccount()
         {
-            var claim = User.FindFirst("UserId");
+            var claim = User.FindFirst(ClaimTypes.NameIdentifier);
             if (claim == null)
                 return RedirectToAction("Login", "Authentication");
 
             int userId = int.Parse(claim.Value);
-
             _accountService.DeleteAccount(userId);
-
-            // also logout user
-            return RedirectToAction("Logout", "Authentication");
+            return RedirectToAction("Account");
         }
     }
 }

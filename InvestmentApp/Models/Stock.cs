@@ -1,5 +1,6 @@
 ﻿namespace InvestmentApp.Models
 {
+    //Keegan Erdis
     public class Stock
     {
         public int StockId { get; set; }

@@ -4,6 +4,7 @@ using InvestmentApp.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InvestmentApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251128165315_AddingPurchaseDateToPortfolioHolding")]
+    partial class AddingPurchaseDateToPortfolioHolding
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,36 +24,6 @@ namespace InvestmentApp.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("InvestmentApp.Models.Account", b =>
-                {
-                    b.Property<int>("AccountId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AccountId"));
-
-                    b.Property<int>("AccountType")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ChequingAccountId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("SavingsAccountId")
-                        .HasColumnType("int");
-
-                    b.HasKey("AccountId");
-
-                    b.HasIndex("ChequingAccountId")
-                        .IsUnique()
-                        .HasFilter("[ChequingAccountId] IS NOT NULL");
-
-                    b.HasIndex("SavingsAccountId")
-                        .IsUnique()
-                        .HasFilter("[SavingsAccountId] IS NOT NULL");
-
-                    b.ToTable("Accounts");
-                });
 
             modelBuilder.Entity("InvestmentApp.Models.AdminRecommendation", b =>
                 {
@@ -166,25 +139,6 @@ namespace InvestmentApp.Migrations
                     b.ToTable("PortfolioHoldings");
                 });
 
-            modelBuilder.Entity("InvestmentApp.Models.SavingsAccount", b =>
-                {
-                    b.Property<int>("SavingsAccountId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("SavingsAccountId"));
-
-                    b.Property<decimal>("Balance")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("SavingsAccountId");
-
-                    b.ToTable("SavingsAccounts");
-                });
-
             modelBuilder.Entity("InvestmentApp.Models.Stock", b =>
                 {
                     b.Property<int>("StockId")
@@ -242,21 +196,6 @@ namespace InvestmentApp.Migrations
                     b.HasKey("UserId");
 
                     b.ToTable("Users", (string)null);
-                });
-
-            modelBuilder.Entity("InvestmentApp.Models.Account", b =>
-                {
-                    b.HasOne("InvestmentApp.Models.ChequingAccount", "ChequingAccount")
-                        .WithOne("Account")
-                        .HasForeignKey("InvestmentApp.Models.Account", "ChequingAccountId");
-
-                    b.HasOne("InvestmentApp.Models.SavingsAccount", "SavingsAccount")
-                        .WithOne("Account")
-                        .HasForeignKey("InvestmentApp.Models.Account", "SavingsAccountId");
-
-                    b.Navigation("ChequingAccount");
-
-                    b.Navigation("SavingsAccount");
                 });
 
             modelBuilder.Entity("InvestmentApp.Models.AdminRecommendation", b =>
@@ -319,21 +258,9 @@ namespace InvestmentApp.Migrations
                     b.Navigation("Stock");
                 });
 
-            modelBuilder.Entity("InvestmentApp.Models.ChequingAccount", b =>
-                {
-                    b.Navigation("Account")
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("InvestmentApp.Models.Portfolio", b =>
                 {
                     b.Navigation("Holdings");
-                });
-
-            modelBuilder.Entity("InvestmentApp.Models.SavingsAccount", b =>
-                {
-                    b.Navigation("Account")
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("InvestmentApp.Models.Stock", b =>

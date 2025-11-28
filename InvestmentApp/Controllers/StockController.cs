@@ -7,6 +7,8 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 
+
+// Keegan Erdis
 namespace InvestmentApp.Controllers
 {
     public class StockController : Controller
@@ -159,7 +161,7 @@ namespace InvestmentApp.Controllers
         [HttpPost]
 public async Task<IActionResult> BuyFromSearch(int userId, int portfolioId, string symbol, decimal quantity)
 {
-    // Get the logged-in user with portfolio and holdings
+    // Get the logged in user with portfolio and holdings
     var user = await _context.Users
         .Include(u => u.ChequingAccount)
         .Include(u => u.Portfolios)
@@ -179,7 +181,7 @@ public async Task<IActionResult> BuyFromSearch(int userId, int portfolioId, stri
 
     if (stock == null)
     {
-        // Fetch details from Finnhub (symbol, company name, latest price)
+        // Fetch details from Finnhub 
         var stockInfo = await _stockService.GetStockDetailsAsync(symbol);
 
         if (stockInfo == null)
@@ -196,47 +198,53 @@ public async Task<IActionResult> BuyFromSearch(int userId, int portfolioId, stri
         _context.Stocks.Add(stock);
         await _context.SaveChangesAsync(); // Save to generate StockId
     }
-    else
-    {
-        // Update price in DB to current Finnhub price
-        var quote = await _stockService.GetStockAsync(symbol);
-        stock.Price = quote.Price;
-        stock.LastUpdated = DateTime.Now;
-        await _context.SaveChangesAsync();
-    }
-
-    var cost = stock.Price * quantity;
-    if (user.ChequingAccount.Balance < cost)
-        return BadRequest("Insufficient funds.");
-
-    user.ChequingAccount.Balance -= cost;
-
-    // Update or add holding
-    var holding = portfolio.Holdings.FirstOrDefault(h => h.StockId == stock.StockId);
-    if (holding == null)
-    {
-        portfolio.Holdings.Add(new PortfolioHolding
+        else
         {
-            StockId = stock.StockId,
-            Quantity = quantity,
-            AvgPrice = stock.Price
-        });
-    }
-    else
-    {
-        holding.AvgPrice = (holding.AvgPrice * holding.Quantity + stock.Price * quantity) / (holding.Quantity + quantity);
-        holding.Quantity += quantity;
-    }
-
-    await _context.SaveChangesAsync();
-    return RedirectToAction("Index", new { userId });
+            // Update price in DB to current Finnhub price
+            var quote = await _stockService.GetStockAsync(symbol);
+            stock.Price = quote.Price;
+            stock.LastUpdated = DateTime.Now;
+            await _context.SaveChangesAsync();
         }
+
+        var cost = stock.Price * quantity;
+
+        if (user.ChequingAccount.Balance < cost)
+                {
+                    TempData["Error"] = $"Insufficient funds. Your balance is {user.ChequingAccount.Balance:C}, but the cost is {cost:C}.";
+                    return RedirectToAction("Index");
+                }
+        
+
+        user.ChequingAccount.Balance -= cost;
+
+        // Update or add holding
+        var holding = portfolio.Holdings.FirstOrDefault(h => h.StockId == stock.StockId);
+        if (holding == null)
+        {
+            portfolio.Holdings.Add(new PortfolioHolding
+            {
+                StockId = stock.StockId,
+                Quantity = quantity,
+                AvgPrice = stock.Price
+            });
+        }
+        else
+        {
+            holding.AvgPrice = (holding.AvgPrice * holding.Quantity + stock.Price * quantity) / (holding.Quantity + quantity);
+            holding.Quantity += quantity;
+        }
+
+        await _context.SaveChangesAsync();
+        return RedirectToAction("Index", new { userId });
+        }
+
         [HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken] 
         public async Task<IActionResult> BuyStock(int stockId, int portfolioId, decimal quantity)
         {
-            // Authentication Check (Get UserId from Claims)
+            // Authentication Check 
             var userId = GetCurrentUserId();
             if (userId == null)
             {
@@ -258,13 +266,13 @@ public async Task<IActionResult> BuyFromSearch(int userId, int portfolioId, stri
             if (quantity <= 0)
                 return BadRequest("Quantity must be greater than zero.");
 
-            // Load Stock from DB and Update Price (API Call)
+            // Load Stock from DB and Update Price (API)
             var stock = await _context.Stocks.FirstOrDefaultAsync(s => s.StockId == stockId);
 
             if (stock == null)
                 return BadRequest("Stock not found in the database.");
 
-            // Fetch current price from Finnhub (1 API Call per Buy operation is okay)
+            // Fetch current price from Finnhub 
             var quote = await _stockService.GetStockAsync(stock.Symbol);
 
             // Update the stock entity with the latest price
@@ -275,7 +283,11 @@ public async Task<IActionResult> BuyFromSearch(int userId, int portfolioId, stri
            
             var cost = stock.Price * quantity;
             if (user.ChequingAccount.Balance < cost)
-                return BadRequest("Insufficient funds in Chequing Account.");
+            {
+                TempData["Error"] = $"Insufficient funds. Your balance is {user.ChequingAccount.Balance:C}, but the cost is {cost:C}.";
+                return RedirectToAction("Index");
+            }
+                
 
             user.ChequingAccount.Balance -= cost;
 
@@ -289,12 +301,12 @@ public async Task<IActionResult> BuyFromSearch(int userId, int portfolioId, stri
                 {
                     StockId = stock.StockId,
                     Quantity = quantity,
-                    AvgPrice = stock.Price // Initial AvgPrice is the current price
+                    AvgPrice = stock.Price 
                 });
             }
             else
             {
-                // Update existing holding (Calculate new weighted average price)
+                // Update existing holding 
                 holding.AvgPrice = (holding.AvgPrice * holding.Quantity + stock.Price * quantity) / (holding.Quantity + quantity);
                 holding.Quantity += quantity;
             }

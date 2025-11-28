@@ -35,14 +35,11 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-controller="Stock" asp-action="Search">Search Stocks</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" " asp-area="" asp-controller="Stock" asp-action="Index">Stock Page (/Stock/Index/userId)</a>
-                            
-                        </li>
+                       
                             @if (User.Identity.IsAuthenticated)
                             {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Stock" asp-action="Index">
+                                <a class="nav-link text-dark" asp-controller="Stock" asp-action="Index">
                                      My Portfolio
                                 </a>
                             </li>
