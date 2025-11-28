@@ -69,8 +69,8 @@ namespace InvestmentApp.Controllers
         // SEARCH PAGE (GET)
         public async Task<IActionResult> Search()
         {
-            
-            var userId = GetCurrentUserId();
+
+            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
             if (userId == null) return RedirectToAction("Login", "Authentication");
 
@@ -98,8 +98,8 @@ namespace InvestmentApp.Controllers
         public async Task<IActionResult> Search(string query)
         {
             // Retrieve the user to populate the Buy forms in the view
-            
-            var userId = GetCurrentUserId();
+
+            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
             if (userId == null)
             {
@@ -245,7 +245,7 @@ public async Task<IActionResult> BuyFromSearch(int userId, int portfolioId, stri
         public async Task<IActionResult> BuyStock(int stockId, int portfolioId, decimal quantity)
         {
             // Authentication Check 
-            var userId = GetCurrentUserId();
+            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             if (userId == null)
             {
                 return RedirectToAction("Login", "Authentication");
@@ -256,7 +256,7 @@ public async Task<IActionResult> BuyFromSearch(int userId, int portfolioId, stri
                 .Include(u => u.ChequingAccount)
                 .Include(u => u.Portfolios.Where(p => p.PortfolioId == portfolioId)) // Load only the target portfolio
                     .ThenInclude(p => p.Holdings)
-                .FirstOrDefaultAsync(u => u.UserId == userId.Value);
+                .FirstOrDefaultAsync(u => u.UserId == userId);
 
             if (user == null || !user.Portfolios.Any())
                 return NotFound("User or Portfolio not found.");
@@ -326,7 +326,7 @@ public async Task<IActionResult> BuyFromSearch(int userId, int portfolioId, stri
         public async Task<IActionResult> SellStock(int portfolioId, int stockId, decimal quantity)
         {
             //Authentication Check (Get UserId from Claims)
-            var userId = GetCurrentUserId();
+            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             if (userId == null)
             {
                 return RedirectToAction("Login", "Authentication");
@@ -338,7 +338,7 @@ public async Task<IActionResult> BuyFromSearch(int userId, int portfolioId, stri
                 .Include(u => u.ChequingAccount)
                 .Include(u => u.Portfolios.Where(p => p.PortfolioId == portfolioId))
                     .ThenInclude(p => p.Holdings.Where(h => h.StockId == stockId)) // Load only the target holding
-                .FirstOrDefaultAsync(u => u.UserId == userId.Value);
+                .FirstOrDefaultAsync(u => u.UserId == userId);
 
             if (user == null || !user.Portfolios.Any())
                 return NotFound("User or Portfolio not found.");
