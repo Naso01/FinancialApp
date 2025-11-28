@@ -7,37 +7,46 @@
     <p>You do not have a chequing account yet.</p>
 
     <form asp-action="CreateChequing" method="post">
-        <input type="hidden" name="userId" value="1" />
         <label>Starting Balance:</label>
         <input type="number" name="balance" step="0.01" />
         <button type="submit" class="btn btn-success">Create Chequing Account</button>
     </form>
 }
-
 else
 {
+    <p><strong>Account Type:</strong> @Model.Account?.AccountType</p>
     <p><strong>Account ID:</strong> @Model.ChequingAccountId</p>
     <p><strong>Balance:</strong> @Model.Balance</p>
 
-    <!-- edit -->
-    <form asp-action="EditAccount" method="post">
-        <input type="hidden" name="userId" value="@Model.UserId" />
+    <hr />
 
-        <label>Balance:</label>
-        <input type="number" name="balance" value="@Model.Balance" step="0.01" />
+    <!-- add funds -->
+    <button class="btn btn-primary" onclick="toggleFunds()">Add Funds</button>
 
-        <button type="submit" class="btn btn-primary">Save Changes</button>
+    <div id="fundsBox" style="display:none;" class="mt-3">
+        <form asp-action="AddFunds" method="post">
+            <label>Add Amount:</label>
+            <input type="number" name="amount" step="0.01" class="form-control" required />
+            <button type="submit" class="btn btn-success mt-2">Confirm</button>
+        </form>
+    </div>
+
+    <script>
+        function toggleFunds() {
+            var box = document.getElementById("fundsBox");
+            box.style.display = box.style.display === "none" ? "block" : "none";
+        }
+    </script>
+
+    <hr />
+
+    <!-- delete -->
+    <form asp-action="DeleteAccount" method="post">
+        <button type="submit" class="btn btn-danger">Delete Account</button>
     </form>
 
     <br />
 
-    <!-- delete -->
-    <form asp-action="DeleteAccount" method="post">
-        <input type="hidden" name="userId" value="@Model.UserId" />
-        <button type="submit" class="btn btn-danger">Delete Account</button>
-    </form>
-
     <a asp-controller="Portfolio" asp-action="Index" asp-route-userId="@Model.UserId">Manage Portfolios</a>
-    <a asp-controller = "Stock" asp-action = "Index" asp-route-userId = "@Model.UserId" > Manage Stocks </a>
-
+    <a asp-controller="Stock" asp-action="Index" asp-route-userId="@Model.UserId">Manage Stocks</a>
 }

@@ -18,15 +18,11 @@ namespace InvestmentApp.Controllers
             _accountService = accountService;
         }
 
-  
         public IActionResult Account()
         {
             var claim = User.FindFirst(ClaimTypes.NameIdentifier);
             if (claim == null)
-            {
                 return RedirectToAction("Login", "Authentication");
-            }
-                
 
             int userId = int.Parse(claim.Value);
             var account = _accountService.GetAccount(userId);
@@ -52,6 +48,7 @@ namespace InvestmentApp.Controllers
 
             return RedirectToAction("Account");
         }
+
         [HttpPost]
         public IActionResult EditAccount(decimal balance)
         {
@@ -67,6 +64,20 @@ namespace InvestmentApp.Controllers
         }
 
         [HttpPost]
+        public IActionResult AddFunds(decimal amount)
+        {
+            var claim = User.FindFirst("UserId");
+            if (claim == null)
+                return RedirectToAction("Login", "Authentication");
+
+            int userId = int.Parse(claim.Value);
+
+            _accountService.AddFunds(userId, amount);
+
+            return RedirectToAction("Account");
+        }
+
+        [HttpPost]
         public IActionResult DeleteAccount()
         {
             var claim = User.FindFirst("UserId");
@@ -77,7 +88,6 @@ namespace InvestmentApp.Controllers
 
             _accountService.DeleteAccount(userId);
 
-            // also logout user
             return RedirectToAction("Logout", "Authentication");
         }
     }
