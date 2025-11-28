@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InvestmentApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251126005252_FixDecimalPrecision")]
-    partial class FixDecimalPrecision
+    [Migration("20251128013731_FixStockSchema")]
+    partial class FixStockSchema
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -67,7 +67,8 @@ namespace InvestmentApp.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ChequingAccountId"));
 
                     b.Property<decimal>("Balance")
-                        .HasColumnType("decimal(18,2)");
+                        .HasPrecision(18, 4)
+                        .HasColumnType("decimal(18,4)");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
@@ -150,6 +151,9 @@ namespace InvestmentApp.Migrations
                     b.Property<DateTime>("LastUpdated")
                         .HasColumnType("datetime2");
 
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<string>("Symbol")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
@@ -179,6 +183,10 @@ namespace InvestmentApp.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Password")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

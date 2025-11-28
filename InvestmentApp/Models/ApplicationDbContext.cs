@@ -17,7 +17,7 @@ namespace InvestmentApp.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder);
+           
 
             // Portfolio holdings decimal precision
             modelBuilder.Entity<PortfolioHolding>()
@@ -35,6 +35,7 @@ namespace InvestmentApp.Models
 
             // Relationships
             modelBuilder.Entity<User>()
+                .ToTable("Users")
                 .HasOne(u => u.ChequingAccount)
                 .WithOne(c => c.User)
                 .HasForeignKey<ChequingAccount>(c => c.UserId);
@@ -43,8 +44,10 @@ namespace InvestmentApp.Models
                 .HasIndex(s => s.Symbol)
                 .IsUnique();
 
-            modelBuilder.Entity<AdminRecommendation>()
+            modelBuilder.Entity<AdminRecommendation>() 
                 .HasKey(ar => ar.RecommendationId);
+            
+            base.OnModelCreating(modelBuilder);
         }
     }
 }
