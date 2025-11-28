@@ -62,5 +62,39 @@ namespace InvestmentApp.Controllers
 
             return RedirectToAction("Login");
         }
+    
+        //Sign up
+        [HttpGet]
+        public IActionResult SignUp()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult SignUp(string firstName, string lastName, string email, string password)
+        {
+            // Check if email already exists
+            var existing = _context.Users.FirstOrDefault(u => u.Email == email);
+            if (existing != null)
+            {
+                ViewBag.Error = "An account with this email already exists.";
+                return View();
+            }
+
+            var user = new User
+            {
+                FirstName = firstName,
+                LastName = lastName,
+                Email = email,
+                Password = password
+            };
+
+            _context.Users.Add(user);
+            _context.SaveChanges();
+
+            // Auto-login after registration (optional)
+            return RedirectToAction("Login");
+        }
+
     }
 }
