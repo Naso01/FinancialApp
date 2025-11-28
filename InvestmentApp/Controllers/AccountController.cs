@@ -18,6 +18,20 @@ namespace InvestmentApp.Controllers
             _accountService = accountService;
         }
 
+        public IActionResult Index()
+        {
+            var claim = User.FindFirst(ClaimTypes.NameIdentifier);
+            if (claim == null)
+                return RedirectToAction("Login", "Authentication");
+
+            int userId = int.Parse(claim.Value);
+            var user = _context.Users.Find(userId);
+
+            if (user == null)
+                return RedirectToAction("Login", "Authentication");
+
+            return View(user);
+        }
         public IActionResult Account()
         {
             var claim = User.FindFirst(ClaimTypes.NameIdentifier);
@@ -25,7 +39,6 @@ namespace InvestmentApp.Controllers
                 return RedirectToAction("Login", "Authentication");
 
             int userId = int.Parse(claim.Value);
-
             var chequing = _accountService.GetAccount(userId);
             var savings = _accountService.GetSavingsAccount(userId);
 
@@ -35,11 +48,6 @@ namespace InvestmentApp.Controllers
                 return View("Account", savings);
             }
             return View("Account", chequing);
-        }
-
-        public IActionResult Index()
-        {
-            return RedirectToAction("Account");
         }
 
         [HttpPost]
