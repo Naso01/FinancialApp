@@ -14,7 +14,15 @@ namespace InvestmentApp.Controllers
 
         public IActionResult Account()
         {
-            int userId = 1; // temporary until authentication exists
+            var idClaim = User.Claims.FirstOrDefault(c => c.Type == "UserId");
+
+            if (idClaim == null)
+            {
+                return RedirectToAction("Login", "Authentication");
+            }
+
+            int userId = int.Parse(idClaim.Value);
+
             var account = _accountService.GetAccount(userId);
             return View(account);
         }

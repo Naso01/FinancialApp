@@ -52,7 +52,7 @@ namespace InvestmentApp.Controllers
                 principal
             );
 
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Account", "Account", new {id = user.UserId});
         }
 
         // GET: Logout
