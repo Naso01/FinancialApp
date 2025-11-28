@@ -2,7 +2,6 @@ using Finnhub.Client;
 using InvestmentApp.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
-using Finnhub.Client;
 using InvestmentApp.Services;
 
 
