@@ -16,11 +16,11 @@
             // seeding 3 users
             var users = new User[]
             {
-                new User { FirstName = "Alice", LastName = "Smith", Email = "alice@mail.com",
+                new User { FirstName = "Alice", LastName = "Smith", Email = "alice@mail.com", Password = "alice",
                     ChequingAccount = new ChequingAccount { Balance = 10000m } },
-                new User { FirstName = "Bob", LastName = "Johnson", Email = "bob@mail.com",
+                new User { FirstName = "Bob", LastName = "Johnson", Email = "bob@mail.com", Password = "bob",
                     ChequingAccount = new ChequingAccount { Balance = 5000m } },
-                new User { FirstName = "Charlie", LastName = "Brown", Email = "charlie@mail.com",
+                new User { FirstName = "Charlie", LastName = "Brown", Email = "charlie@mail.com", Password = "charlie",
                     ChequingAccount = new ChequingAccount { Balance = 7500m } }
             };
 
