@@ -11,7 +11,6 @@ namespace InvestmentApp.Models
         public DbSet<User> Users { get; set; }
         public DbSet<ChequingAccount> ChequingAccounts { get; set; }
         public DbSet<Account> Accounts { get; set; }
-
         public DbSet<Portfolio> Portfolios { get; set; }
         public DbSet<PortfolioHolding> PortfolioHoldings { get; set; }
         public DbSet<Stock> Stocks { get; set; }
