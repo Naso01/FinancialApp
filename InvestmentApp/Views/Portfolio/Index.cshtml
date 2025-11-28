@@ -1,0 +1,57 @@
+﻿@model List<InvestmentApp.Models.Portfolio>
+
+@{
+    int userId = ViewBag.UserId;  // <── pull it once at the top
+}
+
+<h2>Your Portfolios</h2>
+
+<a class="btn btn-primary mb-3"
+   asp-controller="Portfolio"
+   asp-action="Create"
+   asp-route-userId="@userId">
+    Add Portfolio
+</a>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Created</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var p in Model)
+        {
+            <tr>
+                <td>
+                    <a class="btn btn-sm btn-info"
+                       asp-controller="Stock"
+                       asp-action="Index"
+                       asp-route-userId="@userId">
+                        Search Stocks
+                    </a>
+
+                    <a class="btn btn-sm btn-warning"
+                       asp-controller="Portfolio"
+                       asp-action="Edit"
+                       asp-route-id="@p.PortfolioId"
+                       asp-route-userId="@userId">
+                        Edit
+                    </a>
+
+                    <a class="btn btn-sm btn-danger"
+                       asp-controller="Portfolio"
+                       asp-action="Delete"
+                       asp-route-id="@p.PortfolioId"
+                       asp-route-userId="@userId">
+                        Delete
+                    </a>
+                </td>
+
+            </tr>
+        }
+    </tbody>
+</table>

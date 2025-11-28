@@ -1,0 +1,35 @@
+﻿@model List<InvestmentApp.Models.User>
+
+@{
+    var adminName = Context.Session.GetString("AdminUsername") ?? "Admin";
+}
+
+<h2>Welcome, @adminName</h2>
+
+<a asp-action="Logout" class="btn btn-danger mb-3">Logout</a>
+
+<h2>Admin – User List</h2>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>User ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Chequing Balance</th>
+            <th>Portfolios</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var u in Model)
+        {
+            <tr>
+                <td>@u.UserId</td>
+                <td>@u.FirstName @u.LastName</td>
+                <td>@u.Email</td>
+                <td>@(u.ChequingAccount?.Balance ?? 0)</td>
+                <td>@(u.Portfolios?.Count ?? 0)</td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -52,7 +52,7 @@ namespace InvestmentApp.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("AdminRecommendations");
+                    b.ToTable("AdminRecommendations", (string)null);
                 });
 
             modelBuilder.Entity("InvestmentApp.Models.ChequingAccount", b =>
@@ -75,7 +75,7 @@ namespace InvestmentApp.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("ChequingAccounts");
+                    b.ToTable("ChequingAccounts", (string)null);
                 });
 
             modelBuilder.Entity("InvestmentApp.Models.Portfolio", b =>
@@ -99,7 +99,7 @@ namespace InvestmentApp.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Portfolios");
+                    b.ToTable("Portfolios", (string)null);
                 });
 
             modelBuilder.Entity("InvestmentApp.Models.PortfolioHolding", b =>
@@ -130,7 +130,7 @@ namespace InvestmentApp.Migrations
 
                     b.HasIndex("StockId");
 
-                    b.ToTable("PortfolioHoldings");
+                    b.ToTable("PortfolioHoldings", (string)null);
                 });
 
             modelBuilder.Entity("InvestmentApp.Models.Stock", b =>
@@ -160,7 +160,7 @@ namespace InvestmentApp.Migrations
                     b.HasIndex("Symbol")
                         .IsUnique();
 
-                    b.ToTable("Stocks");
+                    b.ToTable("Stocks", (string)null);
                 });
 
             modelBuilder.Entity("InvestmentApp.Models.User", b =>

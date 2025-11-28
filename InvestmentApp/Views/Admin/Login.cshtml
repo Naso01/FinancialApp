@@ -1,0 +1,20 @@
+﻿<h2>Admin Login</h2>
+
+<form asp-action="Login" method="post" style="max-width: 300px;">
+    <div class="mb-2">
+        <label class="form-label">Username</label>
+        <input name="username" class="form-control form-control-sm" required />
+    </div>
+
+    <div class="mb-2">
+        <label class="form-label">Password</label>
+        <input name="password" type="password" class="form-control form-control-sm" required />
+    </div>
+
+    <button type="submit" class="btn btn-primary btn-sm mt-1">Login</button>
+</form>
+
+@if (ViewBag.Error != null)
+{
+    <p class="text-danger mt-2">@ViewBag.Error</p>
+}
