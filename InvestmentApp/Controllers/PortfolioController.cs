@@ -32,7 +32,7 @@ public class PortfolioController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create(int userId, PortfolioType type)
+    public async Task<IActionResult> Create(int userId, string name, PortfolioType type)
     {
         var user = await _context.Users
             .Include(u => u.Portfolios)
@@ -43,6 +43,7 @@ public class PortfolioController : Controller
 
         var portfolio = new Portfolio
         {
+            Name = name,
             PortfolioType = type,
             CreatedAt = DateTime.Now,
             Holdings = new List<PortfolioHolding>()
