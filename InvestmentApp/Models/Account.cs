@@ -10,7 +10,9 @@
     {
         public int AccountId { get; set; }
         public AccountType AccountType { get; set; }
-        public int ChequingAccountId { get; set; }
+        public int? ChequingAccountId { get; set; }
         public ChequingAccount ChequingAccount { get; set; }
+        public int? SavingsAccountId { get; set; }
+        public SavingsAccount SavingsAccount { get; set; }
     }
 }

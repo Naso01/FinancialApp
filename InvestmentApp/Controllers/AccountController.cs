@@ -47,6 +47,20 @@ namespace InvestmentApp.Controllers
         }
 
         [HttpPost]
+        public IActionResult CreateSavings(decimal balance)
+        {
+            var claim = User.FindFirst(ClaimTypes.NameIdentifier);
+            if (claim == null)
+                return RedirectToAction("Login", "Authentication");
+
+            int userId = int.Parse(claim.Value);
+            _accountService.AddSavingsAccount(userId, balance);
+
+            return RedirectToAction("Account");
+        }
+
+
+        [HttpPost]
         public IActionResult EditAccount(decimal balance)
         {
             var claim = User.FindFirst(ClaimTypes.NameIdentifier);

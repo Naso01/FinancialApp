@@ -1,26 +1,49 @@
-﻿@model ChequingAccount
+﻿@model dynamic
 
 <h2>Your Bank Account</h2>
 
 @if (Model == null)
 {
-    <p>You do not have a chequing account yet.</p>
+    <p>You do not have an account yet.</p>
 
-    <form asp-action="CreateChequing" method="post">
-        <label>Starting Balance:</label>
-        <input type="number" name="balance" step="0.01" />
-        <button type="submit" class="btn btn-success">Create Chequing Account</button>
-    </form>
+    <button class="btn btn-success me-2" onclick="showBox('cheq')">Create Chequing Account</button>
+    <button class="btn btn-primary" onclick="showBox('save')">Create Savings Account</button>
+
+    <div id="cheqBox" style="display:none;" class="mt-3">
+        <form asp-action="CreateChequing" method="post">
+            <label>Starting Balance:</label>
+            <input type="number" name="balance" step="0.01" required class="form-control" />
+            <button type="submit" class="btn btn-success mt-2">Confirm</button>
+        </form>
+    </div>
+
+    <div id="saveBox" style="display:none;" class="mt-3">
+        <form asp-action="CreateSavings" method="post">
+            <label>Starting Balance:</label>
+            <input type="number" name="balance" step="0.01" required class="form-control" />
+            <button type="submit" class="btn btn-primary mt-2">Confirm</button>
+        </form>
+    </div>
+
+    <script>
+        function showBox(type) {
+            document.getElementById("cheqBox").style.display = "none";
+            document.getElementById("saveBox").style.display = "none";
+
+            if (type === 'cheq')
+                document.getElementById("cheqBox").style.display = "block";
+            else
+                document.getElementById("saveBox").style.display = "block";
+        }
+    </script>
 }
 else
 {
+    <!-- existing account display -->
+
     <p><strong>Account Type:</strong> @Model.Account?.AccountType</p>
-    <p><strong>Account ID:</strong> @Model.ChequingAccountId</p>
     <p><strong>Balance:</strong> @Model.Balance</p>
 
-    <hr />
-
-    <!-- add funds -->
     <button class="btn btn-primary" onclick="toggleFunds()">Add Funds</button>
 
     <div id="fundsBox" style="display:none;" class="mt-3">
@@ -38,15 +61,9 @@ else
         }
     </script>
 
-    <hr />
-
     <!-- delete -->
+
     <form asp-action="DeleteAccount" method="post">
-        <button type="submit" class="btn btn-danger">Delete Account</button>
+        <button class="btn btn-danger mt-3">Delete Account</button>
     </form>
-
-    <br />
-
-    <a asp-controller="Portfolio" asp-action="Index" asp-route-userId="@Model.UserId">Manage Portfolios</a>
-    <a asp-controller="Stock" asp-action="Index" asp-route-userId="@Model.UserId">Manage Stocks</a>
 }
