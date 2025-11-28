@@ -45,7 +45,7 @@ namespace InvestmentApp.Controllers
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, user.Email),
-                new Claim("UserId", user.UserId.ToString())
+                new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString())
             };
 
             var identity = new ClaimsIdentity(
