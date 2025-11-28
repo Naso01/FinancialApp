@@ -11,16 +11,47 @@ namespace InvestmentApp.Services
             _db = db;
         }
 
-        public bool EditAccount(int accountId /* + model later */)
+        public ChequingAccount? GetAccount(int userId)
         {
-            // logic later
+            return _db.ChequingAccounts.FirstOrDefault(a => a.UserId == userId);
+        }
+
+        public bool AddChequingAccount(int userId, decimal startingBalance)
+        {
+            // user already has one? reject.
+            if (_db.ChequingAccounts.Any(a => a.UserId == userId))
+                return false;
+
+            var account = new ChequingAccount
+            {
+                UserId = userId,
+                Balance = startingBalance
+            };
+
+            _db.ChequingAccounts.Add(account);
+            _db.SaveChanges();
+            return true;
+        }
+        public bool EditAccount(int userId, decimal balance)
+        {
+            var account = _db.ChequingAccounts.FirstOrDefault(a => a.UserId == userId);
+            if (account == null) return false;
+            account.Balance = balance;
+            _db.SaveChanges();
             return true;
         }
 
-        public bool DeleteAccount(int accountId)
+        public bool DeleteAccount(int userId)
         {
-            // logic later
+            var account = _db.ChequingAccounts.FirstOrDefault(a => a.UserId == userId);
+
+            if (account == null)
+                return false;
+
+            _db.ChequingAccounts.Remove(account);
+            _db.SaveChanges();
             return true;
         }
+
     }
 }
