@@ -1,0 +1,28 @@
+﻿@model InvestmentApp.Models.User
+
+<h2>Edit Account</h2>
+
+<form method="post">
+    <div class="mb-3">
+        <label>First Name</label>
+        <input name="FirstName" class="form-control" value="@Model.FirstName" />
+    </div>
+
+    <div class="mb-3">
+        <label>Last Name</label>
+        <input name="LastName" class="form-control" value="@Model.LastName" />
+    </div>
+
+    <div class="mb-3">
+        <label>Email</label>
+        <input name="Email" class="form-control" type="email" value="@Model.Email" />
+    </div>
+
+    <div class="mb-3">
+        <label>New Password (leave blank to keep current)</label>
+        <input name="Password" class="form-control" type="password" />
+    </div>
+
+    <button class="btn btn-success">Save Changes</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>
