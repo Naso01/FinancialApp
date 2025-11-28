@@ -46,7 +46,11 @@ namespace InvestmentApp.Controllers
                 new Claim(ClaimTypes.Name, user.Email)
             };
 
-            var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            var identity = new ClaimsIdentity(
+                claims,
+                CookieAuthenticationDefaults.AuthenticationScheme
+            );
+
             var principal = new ClaimsPrincipal(identity);
 
             await HttpContext.SignInAsync(
@@ -55,9 +59,6 @@ namespace InvestmentApp.Controllers
             );
 
             return RedirectToAction("Account", "Account");
-            HttpContext.Session.SetInt32("UserId", user.UserId);
-
-            return RedirectToAction("Index", "Home");
         }
 
         public async Task<IActionResult> Logout()
@@ -66,7 +67,6 @@ namespace InvestmentApp.Controllers
             return RedirectToAction("Login");
         }
 
-        // Sign Up
         [HttpGet]
         public IActionResult SignUp()
         {

@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using InvestmentApp.Services;
 
-
 namespace InvestmentApp
 {
     public class Program
@@ -13,20 +12,17 @@ namespace InvestmentApp
         {
             var builder = WebApplication.CreateBuilder(args);
 
-
-            // Add services to the container.
             builder.Services.AddControllersWithViews();
+
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-            builder.Services.AddSession();
 
             builder.Services.AddHttpClient<StockService>();
 
-            // Cookie Authentication -  Nathan Serrano
             builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options =>
                 {
-                    options.LoginPath = "/Authentication/Login";     // redirect here when unauthorized
+                    options.LoginPath = "/Authentication/Login";
                     options.LogoutPath = "/Authentication/Logout";
                 });
 
@@ -34,24 +30,19 @@ namespace InvestmentApp
             builder.Services.AddScoped<PortfolioService>();
             builder.Services.AddScoped<AdminService>();
 
-
             builder.Services.AddSession(options =>
             {
-                options.IdleTimeout = TimeSpan.FromMinutes(30); // optional, adjust session timeout
+                options.IdleTimeout = TimeSpan.FromMinutes(30);
                 options.Cookie.HttpOnly = true;
                 options.Cookie.IsEssential = true;
             });
 
             var app = builder.Build();
 
-            app.UseAuthentication();
-            app.UseAuthorization();
-
-            // Configure the HTTP request pipeline.
+ 
             if (!app.Environment.IsDevelopment())
             {
                 app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
 
@@ -62,16 +53,15 @@ namespace InvestmentApp
                 DbInitializer.Initialize(context);
             }
 
-
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
             app.UseRouting();
-            app.UseSession();
 
-            app.UseSession();
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.UseSession();
 
             app.MapControllerRoute(
                 name: "default",
