@@ -23,9 +23,9 @@ namespace InvestmentApp.Controllers
 
         // POST: Process login
         [HttpPost]
-        public async Task<IActionResult> Login(string username, string password)
+        public async Task<IActionResult> Login(string email, string password)
         {
-            var user = _context.Users.FirstOrDefault(u => u.Email == username);
+            var user = _context.Users.FirstOrDefault(u => u.Email == email);
 
             if (user == null)
             {
@@ -40,29 +40,25 @@ namespace InvestmentApp.Controllers
                 ViewBag.ShowSignup = true;
                 return View();
             }
+
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
                 new Claim(ClaimTypes.Name, user.Email)
             };
 
-            var identity = new ClaimsIdentity(
-                claims,
-                "Cookies"
-            );
-
+            var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
             var principal = new ClaimsPrincipal(identity);
 
             await HttpContext.SignInAsync(
-                "Cookies",
-                    principal,
-                    new AuthenticationProperties
-                    {
-        
-                        IsPersistent = true,
-                            ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(30) 
-                        }
-            ) ;
+                CookieAuthenticationDefaults.AuthenticationScheme,
+                principal,
+                new AuthenticationProperties
+                {
+                    IsPersistent = true,
+                    ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(30)
+                }
+            );
 
             return RedirectToAction("Index", "Home");
         }
@@ -80,27 +76,41 @@ namespace InvestmentApp.Controllers
         }
 
         [HttpPost]
-        public IActionResult SignUp(string firstName, string lastName, string email, string password)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SignUp(User newUser)
         {
-            var existing = _context.Users.FirstOrDefault(u => u.Email == email);
-            if (existing != null)
+            if (!ModelState.IsValid)
             {
-                ViewBag.Error = "An account with this email already exists.";
-                return View();
+                return View(newUser);
             }
 
-            var user = new User
+            // Check if email already exists
+            var existingUser = _context.Users.FirstOrDefault(u => u.Email == newUser.Email);
+            if (existingUser != null)
             {
-                FirstName = firstName,
-                LastName = lastName,
-                Email = email,
-                Password = password
-            };
+                ViewBag.Error = "Email already exists!";
+                return View(newUser);
+            }
 
-            _context.Users.Add(user);
+            // Save user
+            _context.Users.Add(newUser);
             _context.SaveChanges();
 
-            return RedirectToAction("Login");
+            // Auto-login
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.NameIdentifier, newUser.UserId.ToString()),
+                new Claim(ClaimTypes.Name, newUser.FirstName),
+                new Claim(ClaimTypes.Email, newUser.Email)
+            };
+
+            var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            var principal = new ClaimsPrincipal(identity);
+
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+
+            // Redirect to User Profile (dashboard)
+            return RedirectToAction("Index", "Home");
         }
     }
 }

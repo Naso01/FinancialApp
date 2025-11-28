@@ -80,7 +80,6 @@ namespace InvestmentApp.Controllers
 
             ViewBag.User = user;
             ViewBag.UserId = user.UserId;
-
             
             if (!user.Portfolios.Any())
             {

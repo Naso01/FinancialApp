@@ -20,7 +20,7 @@ namespace InvestmentApp
             builder.Services.AddHttpClient<StockService>();
 
             builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-                .AddCookie("Cookies", options =>
+                .AddCookie(options =>
                 {
                     options.Cookie.Name = "AppAuthCookie";
                     options.LoginPath = "/Authentication/Login";
