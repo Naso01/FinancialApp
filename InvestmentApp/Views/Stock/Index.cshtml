@@ -5,6 +5,19 @@
     var allStocks = ViewBag.AllStocks as List<InvestmentApp.Models.Stock>;
 }
 
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger" role="alert">
+        <strong>Transaction Failed:</strong> @TempData["Error"]
+    </div>
+}
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success" role="alert">
+        @TempData["Success"]
+    </div>
+}
+
 <h2>Portfolios</h2>
 <p><strong>User:</strong> @user.FirstName @user.LastName</p>
 <p><strong>Balance:</strong> @user.ChequingAccount.Balance.ToString("C")</p>

@@ -9,6 +9,8 @@
         public decimal Quantity { get; set; }
         public decimal AvgPrice { get; set; }
 
+        public DateTime PurchaseDate { get; set; }
+
         public Portfolio Portfolio { get; set; }
         public Stock Stock { get; set; }
     }
