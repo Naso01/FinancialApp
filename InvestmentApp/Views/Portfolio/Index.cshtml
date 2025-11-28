@@ -26,10 +26,16 @@
         @foreach (var p in Model)
         {
             <tr>
-                <td>@p.PortfolioType</td>
-                <td>@p.CreatedAt.ToShortDateString()</td>
                 <td>
+                    <a class="btn btn-sm btn-info"
+                       asp-controller="Stock"
+                       asp-action="Index"
+                       asp-route-userId="@userId">
+                        Search Stocks
+                    </a>
+
                     <a class="btn btn-sm btn-warning"
+                       asp-controller="Portfolio"
                        asp-action="Edit"
                        asp-route-id="@p.PortfolioId"
                        asp-route-userId="@userId">
@@ -37,12 +43,14 @@
                     </a>
 
                     <a class="btn btn-sm btn-danger"
+                       asp-controller="Portfolio"
                        asp-action="Delete"
                        asp-route-id="@p.PortfolioId"
                        asp-route-userId="@userId">
                         Delete
                     </a>
                 </td>
+
             </tr>
         }
     </tbody>

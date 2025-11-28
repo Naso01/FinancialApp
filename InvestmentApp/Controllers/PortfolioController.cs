@@ -64,17 +64,32 @@ public class PortfolioController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> Edit(int id, PortfolioType type)
+    public async Task<IActionResult> Edit(int id, PortfolioType type, decimal amount)
     {
-        var p = await _context.Portfolios.FindAsync(id);
-        if (p == null) return NotFound();
+        var portfolio = await _context.Portfolios
+            .Include(p => p.User)
+                .ThenInclude(u => u.ChequingAccount)
+            .FirstOrDefaultAsync(p => p.PortfolioId == id);
 
-        p.PortfolioType = type;
+        if (portfolio == null) return NotFound();
+
+        // update data
+        portfolio.PortfolioType = type;
+
+        // transfer funds if amount > 0
+        if (amount > 0)
+        {
+            if (portfolio.User.ChequingAccount.Balance < amount)
+                return BadRequest("Not enough funds.");
+
+            portfolio.User.ChequingAccount.Balance -= amount;
+        }
 
         await _context.SaveChangesAsync();
 
-        return RedirectToAction("Index", new { userId = p.UserId });
+        return RedirectToAction("Index", new { userId = portfolio.UserId });
     }
+
 
     public async Task<IActionResult> Delete(int id)
     {
