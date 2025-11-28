@@ -20,10 +20,13 @@ namespace InvestmentApp
             builder.Services.AddHttpClient<StockService>();
 
             builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-                .AddCookie(options =>
+                .AddCookie("Cookies", options =>
                 {
+                    options.Cookie.Name = "AppAuthCookie";
                     options.LoginPath = "/Authentication/Login";
                     options.LogoutPath = "/Authentication/Logout";
+                    options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+                    options.SlidingExpiration = true;
                 });
 
             builder.Services.AddScoped<AccountService>();
