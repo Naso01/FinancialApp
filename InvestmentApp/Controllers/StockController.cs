@@ -392,6 +392,26 @@ public async Task<IActionResult> BuyFromSearch(int userId, int portfolioId, stri
             
             return RedirectToAction("Index");
         }
+
+        //Nathan--------------
+        //Support Charts After Search
+        public async Task<IActionResult> Chart(string symbol)
+        {
+            long now = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+            long thirtyDaysAgo = DateTimeOffset.UtcNow.AddDays(-30).ToUnixTimeSeconds();
+
+            var candles = await _stockService.GetHistoricalCandlesAsync(symbol, thirtyDaysAgo, now);
+
+            if (candles == null)
+                return Content("Chart data unavailable.");
+
+            ViewBag.Prices = candles.ClosePrices;
+            ViewBag.Timestamps = candles.Timestamps;
+            ViewBag.Symbol = symbol;
+
+            return PartialView("_MiniChart");
+        }
+        //Nathan--------------
     }
 
 }

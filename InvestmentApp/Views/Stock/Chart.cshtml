@@ -1,0 +1,49 @@
+﻿@{
+    var prices = ViewBag.Prices as List<decimal>;
+    var timestamps = ViewBag.Timestamps as List<long>;
+}
+
+<h2>@ViewBag.Symbol — 30-Day Price Chart</h2>
+
+@if (ViewBag.Error != null)
+{
+    <div class="alert alert-danger">@ViewBag.Error</div>
+}
+else
+{
+    <canvas id="stockChart" height="100"></canvas>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        const prices = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(prices));
+        const timestamps = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(timestamps));
+
+        const labels = timestamps.map(t => {
+            const d = new Date(t * 1000);
+            return d.toLocaleDateString();
+        });
+
+        new Chart(document.getElementById('stockChart'), {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: '@ViewBag.Symbol Price',
+                    data: prices,
+                    borderColor: 'rgb(0, 123, 255)',
+                    borderWidth: 2,
+                    pointRadius: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                interaction: { mode: 'index' },
+                scales: {
+                    y: { beginAtZero: false },
+                    x: { ticks: { maxTicksLimit: 10 } }
+                }
+            }
+        });
+    </script>
+}
