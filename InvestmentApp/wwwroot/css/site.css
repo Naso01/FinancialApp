@@ -1,124 +1,101 @@
-/* -------------------------------------------------------------
-   Global Cohesive Styling for Entire Application
-   Author: Nathan Serrano
- --------------------------------------------------------------*/
+/* ----------------------- GLOBAL ----------------------- */
 
-/* Global Reset */
 body {
-    background: #f7f9fc !important;
-    font-family: 'Segoe UI', Roboto, Arial, sans-serif;
-    color: #333;
+    background: #f0f2f5;
+    font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
     margin: 0;
-    padding-bottom: 50px;
+    padding-bottom: 60px;
+    color: #1a1a1a;
 }
 
-/* Title styling */
+/* Headings */
 h1, h2, h3, h4 {
-    font-weight: 600;
-    color: #1f3c88;
+    font-weight: 700;
+    color: #1f2d3d;
+    letter-spacing: -0.5px;
     margin-bottom: 20px;
 }
 
-/* Center main content */
+/* Container spacing */
 .container {
     margin-top: 40px;
 }
 
-/* ------------------ Global Card Style ------------------ */
+
+/* ----------------------- CARD ----------------------- */
+
 .card {
-    border: none !important;
-    border-radius: 12px !important;
-    background: white;
-    box-shadow: 0px 4px 10px rgba(0,0,0,0.08);
+    border: none;
+    border-radius: 16px !important;
+    background: #ffffff;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.06);
 }
 
 .card-header {
-    border-radius: 12px 12px 0 0 !important;
+    border-radius: 16px 16px 0 0 !important;
+    background: linear-gradient(135deg, #4257f5, #6a3df5);
+    color: white !important;
+    font-size: 1.25rem;
     font-weight: 600;
+    padding: 20px !important;
 }
 
-/* ------------------ Global Table Style ------------------ */
-table {
-    margin-top: 15px;
+
+/* ----------------------- TABLES ----------------------- */
+
+.table {
+    margin-top: 10px;
 }
 
-.table th {
-    width: 200px;
-    color: #6c757d !important;
-    font-weight: 600;
-}
-
-.table td {
-    font-size: 16px;
-}
-
-/* ------------------ Navbar Cleanup ------------------ */
-.navbar {
-    background: #1f3c88 !important;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-}
-
-.nav-link, .navbar-brand {
-    color: #fff !important;
-    font-weight: 500;
-}
-
-    .nav-link:hover {
-        opacity: 0.75;
+    .table th {
+        width: 220px;
+        font-weight: 600;
+        color: #6c7a89;
     }
 
-/* ------------------ Global Form Styling ------------------ */
-form label {
+    .table td {
+        font-size: 1rem;
+    }
+
+
+/* ----------------------- FORMS ----------------------- */
+
+label {
     font-weight: 600;
-    margin-bottom: 5px;
+    margin-bottom: 6px;
 }
 
 .form-control {
-    border-radius: 8px !important;
-    border: 1px solid #ced4da;
-    padding: 10px;
+    border: 1px solid #dfe3e8;
+    border-radius: 10px;
+    padding: 12px;
+    transition: all 0.2s ease;
 }
 
     .form-control:focus {
-        border-color: #1f3c88;
-        box-shadow: 0 0 5px rgba(31, 60, 136, 0.3);
+        border-color: #5a67f1;
+        box-shadow: 0 0 8px rgba(90, 103, 241, 0.3);
     }
 
-/* ------------------ Buttons ------------------ */
+
+/* ----------------------- BUTTONS ----------------------- */
+
 .btn {
-    border-radius: 8px !important;
-    padding: 10px 18px;
-    font-weight: 500 !important;
+    border-radius: 10px !important;
+    padding: 10px 20px;
+    font-weight: 600;
+    transition: 0.2s ease-in-out;
 }
 
 .btn-primary {
-    background: #1f3c88 !important;
-    border-color: #1f3c88 !important;
+    background: #5a67f1 !important;
+    border-color: #5a67f1 !important;
 }
 
     .btn-primary:hover {
-        background: #17306e !important;
+        background: #4a53d8 !important;
     }
 
 .btn-danger {
-    background: #d9534f !important;
-    border-color: #d9534f !important;
-}
-
-    .btn-danger:hover {
-        background: #b74440 !important;
-    }
-
-/* ------------------ Alerts ------------------ */
-.alert {
-    border-radius: 8px;
-}
-
-/* ------------------ Footer ------------------ */
-footer {
-    margin-top: 40px;
-    padding: 20px 0;
-    background: #1f3c88;
-    color: white;
-    text-align: center;
-}
+    background: #e14a4a !important;
+    border-color: #e14a4
