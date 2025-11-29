@@ -28,11 +28,13 @@
                 // creating empty portfolio for each user
                 var portfolio = new Portfolio
                 {
+                    Name = $"{user.FirstName}'s Portfolio",
                     PortfolioType = PortfolioType.SelfDirected,
                     CreatedAt = DateTime.Now,
                     User = user,
-                    Holdings = new System.Collections.Generic.List<PortfolioHolding>()
+                    Holdings = new List<PortfolioHolding>()
                 };
+
 
                 user.Portfolios = new System.Collections.Generic.List<Portfolio> { portfolio };
 
