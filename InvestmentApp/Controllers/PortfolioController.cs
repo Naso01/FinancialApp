@@ -25,15 +25,25 @@ public class PortfolioController : Controller
         ViewBag.UserId = userId;
         return View(user.Portfolios);
     }
-    public IActionResult Create(int userId)
+    public async Task<IActionResult> Create(int userId)
     {
+        var hasManaged = await _context.Portfolios
+            .AnyAsync(p => p.UserId == userId && p.PortfolioType == PortfolioType.Managed);
+
         ViewBag.UserId = userId;
+        ViewBag.HasManagedPortfolio = hasManaged;
         return View();
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create(int userId, PortfolioType type)
+    public async Task<IActionResult> Create(int userId, string name, PortfolioType type)
     {
+        if (string.IsNullOrWhiteSpace(name))
+        {
+            TempData["Error"] = "Please enter a portfolio name.";
+            return RedirectToAction("Create", new { userId });
+        }
+
         var user = await _context.Users
             .Include(u => u.Portfolios)
             .FirstOrDefaultAsync(u => u.UserId == userId);
@@ -41,8 +51,15 @@ public class PortfolioController : Controller
         if (user == null)
             return NotFound();
 
+        if (type == PortfolioType.Managed && user.Portfolios.Any(p=> p.PortfolioType == PortfolioType.Managed))
+        {
+            TempData["Error"] = "User already has a Managed Portfolio.";
+            return RedirectToAction("Create", new { userId });
+        }
+
         var portfolio = new Portfolio
         {
+            Name = name,
             PortfolioType = type,
             CreatedAt = DateTime.Now,
             Holdings = new List<PortfolioHolding>()

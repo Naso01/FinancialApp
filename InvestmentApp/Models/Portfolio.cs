@@ -1,4 +1,6 @@
-﻿namespace InvestmentApp.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace InvestmentApp.Models
 {
     public enum PortfolioType
     {
@@ -9,6 +11,7 @@
     public class Portfolio
     {
         public int PortfolioId { get; set; }
+        public string Name { get; set; }
         public int UserId { get; set; }
         public PortfolioType PortfolioType { get; set; }
         public DateTime CreatedAt { get; set; }

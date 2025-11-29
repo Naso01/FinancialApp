@@ -23,35 +23,40 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var p in Model)
-        {
-            <tr>
-                <td>
-                    <a class="btn btn-sm btn-info"
-                       asp-controller="Stock"
-                       asp-action="Index"
-                       asp-route-userId="@userId">
-                        Search Stocks
-                    </a>
+@foreach (var p in Model)
+{
+    <tr>
+        <td>@(string.IsNullOrEmpty(p.Name) ? "(Unnamed Portfolio)" : p.Name)</td>
 
-                    <a class="btn btn-sm btn-warning"
-                       asp-controller="Portfolio"
-                       asp-action="Edit"
-                       asp-route-id="@p.PortfolioId"
-                       asp-route-userId="@userId">
-                        Edit
-                    </a>
+        <td>
+            @(p.PortfolioType == PortfolioType.Managed ? "Managed" : "Self-Directed")
+        </td>
 
-                    <a class="btn btn-sm btn-danger"
-                       asp-controller="Portfolio"
-                       asp-action="Delete"
-                       asp-route-id="@p.PortfolioId"
-                       asp-route-userId="@userId">
-                        Delete
-                    </a>
-                </td>
+        <td>@p.CreatedAt.ToShortDateString()</td>
 
-            </tr>
-        }
-    </tbody>
+        <td>
+            <a class="btn btn-info btn-sm"
+               asp-controller="Stock"
+               asp-action="Index"
+               asp-route-userId="@ViewBag.UserId"
+               asp-route-portfolioId="@p.PortfolioId">
+                Search Stocks
+            </a>
+
+            <a class="btn btn-warning btn-sm"
+               asp-action="Edit"
+               asp-route-id="@p.PortfolioId">
+                Edit
+            </a>
+
+            <a class="btn btn-danger btn-sm"
+               asp-action="Delete"
+               asp-route-id="@p.PortfolioId">
+                Delete
+            </a>
+        </td>
+    </tr>
+}
+</tbody>
+
 </table>
