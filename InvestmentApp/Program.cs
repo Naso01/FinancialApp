@@ -32,6 +32,7 @@ namespace InvestmentApp
             builder.Services.AddScoped<AccountService>();
             builder.Services.AddScoped<PortfolioService>();
             builder.Services.AddScoped<AdminService>();
+            builder.Services.AddScoped<ManagedPortfolioService>();
 
             builder.Services.AddSession(options =>
             {

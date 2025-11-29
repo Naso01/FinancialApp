@@ -14,63 +14,36 @@ namespace InvestmentApp.Services
             _stockService = stockService;
         }
 
-        public async Task InitializeManagedPortfolio(int userId, decimal initialDeposit)
+        public async Task InitializeManagedPortfolio(int portfolioId)
         {
-            //Create a new Portfolio for the user
-            var portfolio = new Portfolio
-            {
-                UserId = userId,
-                PortfolioType = PortfolioType.Managed, 
-                CreatedAt = DateTime.Now
-            };
-            _context.Portfolios.Add(portfolio);
-            await _context.SaveChangesAsync();
+            var portfolio = await _context.Portfolios.FindAsync(portfolioId);
+            if (portfolio == null) return;
 
-            // Define the initial holdings (2 shares of MSFT, 5 shares of GOOG)
-            // Must already be in Db
             var initialHoldings = new List<(string Symbol, decimal Quantity)>
-        {
-            ("MSFT", 2.00m),
-            ("GOOG", 5.00m),
-            ("PLTR", 10.00m)
-        };
+            {
+                ("MSFT", 2.00m),
+                ("GOOG", 5.00m),
+                ("PLTR", 10.00m)
+    };
 
             foreach (var (symbol, quantity) in initialHoldings)
             {
                 var stock = await _context.Stocks.FirstOrDefaultAsync(s => s.Symbol == symbol);
+                if (stock == null) continue;
 
-                if (stock != null)
+                var quote = await _stockService.GetStockAsync(symbol);
+                decimal currentPrice = quote?.Price ?? 0;
+
+                var holding = new PortfolioHolding
                 {
-                    // Fetch the current price from the API 
-                    var quote = await _stockService.GetStockAsync(symbol);
-                    decimal currentPrice = quote?.Price ?? 0; 
+                    PortfolioId = portfolioId,
+                    StockId = stock.StockId,
+                    Quantity = quantity,
+                    AvgPrice = currentPrice,
+                    PurchaseDate = DateTime.Now
+                };
 
-                    decimal cost = quantity * currentPrice;
-
-                    //Create the Holding
-                    var holding = new PortfolioHolding
-                    {
-                        PortfolioId = portfolio.PortfolioId,
-                        StockId = stock.StockId,
-                        Quantity = quantity,
-                        // For initialization, AvgPrice is the current price
-                        AvgPrice = currentPrice,
-                        PurchaseDate = DateTime.Now
-                    };
-                    _context.PortfolioHoldings.Add(holding);
-
-                    // Subtract cost from the initial deposit
-                                        
-                    initialDeposit -= cost;
-                }
-            }
-
-            
-            var userAccount = await _context.ChequingAccounts.FirstOrDefaultAsync(a => a.UserId == userId);
-            if (userAccount != null)
-            {
-                userAccount.Balance = initialDeposit;
-                _context.ChequingAccounts.Update(userAccount);
+                _context.PortfolioHoldings.Add(holding);
             }
 
             await _context.SaveChangesAsync();

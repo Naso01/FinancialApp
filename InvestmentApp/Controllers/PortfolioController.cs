@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using InvestmentApp.Models;
+using InvestmentApp.Services;
 
 /***************************************************************************************
  * Author: Hanjia Li
@@ -20,11 +21,13 @@ using InvestmentApp.Models;
 public class PortfolioController : Controller
 {
     private readonly ApplicationDbContext _context;
+    private readonly ManagedPortfolioService _managedPortfolioService;
 
     // Injects database context into the controller
-    public PortfolioController(ApplicationDbContext context)
+    public PortfolioController(ApplicationDbContext context, ManagedPortfolioService managedPortfolioService)
     {
         _context = context;
+        _managedPortfolioService = managedPortfolioService;
     }
 
     // GET: Displays all portfolios for a specific user
@@ -80,16 +83,23 @@ public class PortfolioController : Controller
             return RedirectToAction("Create", new { userId });
         }
 
+        // Create the base portfolio record
         var portfolio = new Portfolio
         {
+            UserId = userId,
             Name = name,
             PortfolioType = type,
-            CreatedAt = DateTime.Now,
-            Holdings = new List<PortfolioHolding>()
+            CreatedAt = DateTime.Now
         };
 
-        user.Portfolios.Add(portfolio);
-        await _context.SaveChangesAsync();
+        _context.Portfolios.Add(portfolio);
+        await _context.SaveChangesAsync();       // ★ PortfolioId generated here
+
+        // If it's a Managed portfolio, initialize with default stocks
+        if (type == PortfolioType.Managed)
+        {
+            await _managedPortfolioService.InitializeManagedPortfolio(portfolio.PortfolioId);
+        }
 
         return RedirectToAction("Index", new { userId });
     }

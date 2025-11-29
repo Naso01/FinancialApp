@@ -6,6 +6,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Hosting;
 
 
 // Keegan Erdis
@@ -349,10 +350,18 @@ public async Task<IActionResult> BuyFromSearch(int userId, int portfolioId, stri
                 return BadRequest("Holding not found in portfolio.");
 
             if (quantity <= 0)
-                return BadRequest("Quantity must be greater than zero.");
+            {
+                TempData["Error"] = $"Insufficient Quantity";
+                return RedirectToAction("Index");
+            }
+                
 
             if (holding.Quantity < quantity)
-                return BadRequest($"Insufficient quantity to sell. Max available: {holding.Quantity}.");
+            {
+                TempData["Error"] = $"Insufficient quantity to sell. Max available: {holding.Quantity}.";
+                return RedirectToAction("Index");
+            }
+               
 
             //Load Stock and Update Price (API Call)
             var stock = await _context.Stocks.FirstOrDefaultAsync(s => s.StockId == stockId);

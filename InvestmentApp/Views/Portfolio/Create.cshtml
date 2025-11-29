@@ -29,6 +29,19 @@
 
     <div class="form-group mb-3">
         <label>Portfolio Type</label>
+        <div class="form-group mb-3" id="depositContainer" style="display:none;">
+            <label>Initial Deposit</label>
+            <input type="number" step="0.01" name="initialDeposit" class="form-control" />
+        </div>
+
+        <script>
+            const typeSelect = document.getElementById("type");
+            const depositDiv = document.getElementById("depositContainer");
+
+            typeSelect.addEventListener("change", () => {
+                depositDiv.style.display = typeSelect.value === "1" ? "block" : "none";
+            });
+        </script>
         <select id="type" name="type" class="form-select">
             <option value="0">Self-Directed</option>
             <option value="1">Managed</option>

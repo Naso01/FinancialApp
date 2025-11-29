@@ -20,7 +20,7 @@
                 new User { FirstName = "Bob", LastName = "Johnson", Email = "bob@mail.com", Password = "bob",
                     ChequingAccount = new ChequingAccount { Balance = 5000m } },
                 new User { FirstName = "Charlie", LastName = "Brown", Email = "charlie@mail.com", Password = "charlie",
-                    ChequingAccount = new ChequingAccount { Balance = 7500m } }
+                    ChequingAccount = new ChequingAccount { Balance = 75000m } }
             };
 
             foreach (var user in users)
