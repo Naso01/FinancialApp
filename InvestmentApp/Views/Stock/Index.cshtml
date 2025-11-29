@@ -58,7 +58,7 @@
                         <td>@holding.Quantity</td>
                         <td>@holding.AvgPrice.ToString("C")</td>
                         <td>@stock.Price.ToString("C")</td>
-                        <td>@(holding.Quantity * stock.Price).ToString("C")</td>
+                        <td>@(holding.Quantity * stock.Price)</td>
                         <td>
                             <form asp-action="SellStock" method="post">
                                 <input type="hidden" name="userId" value="@user.UserId" />
