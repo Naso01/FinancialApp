@@ -1,4 +1,17 @@
-﻿@model List<InvestmentApp.Models.User>
+﻿@*
+    ***************************************************************************************
+     Author: Hanjia Li
+     Description:
+         This view displays the admin dashboard user list. It shows:
+         - All registered users
+         - Basic account information (name, email)
+         - Chequing account balance
+         - Number of portfolios each user owns
+         
+         Only accessible to authenticated administrators through session-based login.
+    ***************************************************************************************
+*@
+@model List<InvestmentApp.Models.User>
 
 @{
     var adminName = Context.Session.GetString("AdminUsername") ?? "Admin";

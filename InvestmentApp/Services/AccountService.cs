@@ -1,6 +1,22 @@
 ﻿using InvestmentApp.Models;
 using Microsoft.EntityFrameworkCore;
 
+/***************************************************************************************
+ * Author: Hanjia Li
+ * Description:
+ *     Provides all business logic for managing user financial accounts within the
+ *     InvestmentApp system. This includes:
+ *       - Retrieving chequing or savings accounts
+ *       - Creating new chequing or savings accounts
+ *       - Editing balances
+ *       - Adding funds
+ *       - Calculating savings interest
+ *       - Deleting accounts and associated type records
+ *
+ *     This service acts as the logic layer between controllers and the database, ensuring
+ *     consistent and centralized handling of account operations.
+ ***************************************************************************************/
+
 namespace InvestmentApp.Services
 {
     public class AccountService
@@ -12,10 +28,9 @@ namespace InvestmentApp.Services
             _db = db;
         }
 
-        //returns either ChequingAccount or SavingsAccount object, or null if none found
+        // Retrieves either a ChequingAccount or SavingsAccount for a user
         public object? GetAccount(int userId)
         {
-        
             var cheq = _db.ChequingAccounts
                 .Include(a => a.Account)
                 .FirstOrDefault(a => a.UserId == userId);
@@ -30,7 +45,7 @@ namespace InvestmentApp.Services
             return save;
         }
 
-
+        // Creates a new chequing account for the user (only one allowed)
         public bool AddChequingAccount(int userId, decimal startingBalance)
         {
             if (_db.ChequingAccounts.Any(a => a.UserId == userId))
@@ -57,6 +72,7 @@ namespace InvestmentApp.Services
             return true;
         }
 
+        // Creates a new savings account for the user (only one allowed)
         public bool AddSavingsAccount(int userId, decimal startingBalance)
         {
             if (_db.SavingsAccounts.Any(a => a.UserId == userId))
@@ -82,19 +98,23 @@ namespace InvestmentApp.Services
 
             return true;
         }
+
+        // Returns the user's savings account (if any)
         public SavingsAccount? GetSavingsAccount(int userId)
         {
             return _db.SavingsAccounts
                 .Include(s => s.Account)
                 .FirstOrDefault(s => s.UserId == userId);
         }
+
+        // Calculates interest for a savings account at a fixed rate
         public decimal CalculateSavingsInterest(decimal balance)
         {
             const decimal rate = 0.0125m;
             return balance * rate;
         }
 
-
+        // Adds funds to whichever account the user has (chequing or savings)
         public bool AddFunds(int userId, decimal amount)
         {
             var cheq = _db.ChequingAccounts.FirstOrDefault(a => a.UserId == userId);
@@ -115,15 +135,19 @@ namespace InvestmentApp.Services
 
             return false;
         }
-        public bool EditAccount(int userId, decimal balance) 
-        { 
-            var account = _db.ChequingAccounts.FirstOrDefault(a => a.UserId == userId); 
-            if (account == null) return false; 
-            account.Balance = balance; 
-            _db.SaveChanges(); 
-            return true; 
+
+        // Edits the balance of the user's chequing account
+        public bool EditAccount(int userId, decimal balance)
+        {
+            var account = _db.ChequingAccounts.FirstOrDefault(a => a.UserId == userId);
+            if (account == null) return false;
+
+            account.Balance = balance;
+            _db.SaveChanges();
+            return true;
         }
 
+        // Deletes either a chequing or savings account along with its type entry
         public bool DeleteAccount(int userId)
         {
             var chequing = _db.ChequingAccounts.FirstOrDefault(a => a.UserId == userId);
@@ -151,6 +175,5 @@ namespace InvestmentApp.Services
             _db.SaveChanges();
             return true;
         }
-
     }
 }

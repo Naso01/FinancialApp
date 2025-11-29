@@ -11,21 +11,18 @@ namespace InvestmentApp.Services
             _db = db;
         }
 
-        public bool AddHolding(int portfolioId /* + model later */)
+        public bool AddHolding(int portfolioId)
         {
-            // logic later
             return true;
         }
 
         public bool EditHolding(int holdingId)
         {
-            // logic later
             return true;
         }
 
         public bool DeleteHolding(int holdingId)
         {
-            // logic later
             return true;
         }
     }
