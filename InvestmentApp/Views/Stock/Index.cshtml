@@ -1,9 +1,27 @@
 ﻿@model Dictionary<InvestmentApp.Models.Portfolio, List<(InvestmentApp.Models.PortfolioHolding holding, InvestmentApp.Models.Stock stock)>>
-
+@{
+    /***************************************************************************************
+         * Author: Keegan Erdis
+         * Description:
+         *     Razor view responsible for displaying a user's investment portfolios in the
+         *     InvestmentApp system. The view provides:
+         *
+         *       • Portfolio overview including portfolio type and creation date
+         *       • Holdings with live stock prices, average purchase price, and current value
+         *       • Forms to sell existing holdings with quantity validation
+         *       • Forms to buy new stocks from the available stock list
+         *       • Transaction feedback via TempData (success or error messages)
+         *       • Quick navigation to the stock search page for additional purchases
+         *
+         *     This view is tightly coupled to the StockController and expects a model of
+         *     type Dictionary<Portfolio, List<(PortfolioHolding holding, Stock stock)>>,
+         *     along with ViewBag properties for the current user and all stocks.
+         ***************************************************************************************/
+}
 @{
     var user = ViewBag.User as InvestmentApp.Models.User;
     var allStocks = ViewBag.AllStocks as List<InvestmentApp.Models.Stock>;
-}
+} 
 
 @if (TempData["Error"] != null)
 {

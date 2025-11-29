@@ -1,6 +1,24 @@
 ﻿using InvestmentApp.Models;
 using Microsoft.EntityFrameworkCore;
 
+/***************************************************************************************
+ * Author: Keegan Erdis
+ * Description:
+ *     Service responsible for automatically configuring and initializing Managed
+ *     Portfolios within the InvestmentApp system. This service enforces the logic
+ *     that distinguishes Managed Portfolios from Self-Directed ones by:
+ *
+ *       • Automatically inserting predefined starter holdings (MSFT, GOOG, PLTR)
+ *       • Fetching live stock prices via the StockService to set accurate AvgPrice
+ *       • Linking holdings to the newly created portfolio
+ *       • Ensuring initialization is performed only once per portfolio
+ *
+ *     The ManagedPortfolioService acts as a business-logic layer that coordinates
+ *     Entity Framework Core operations and external API data when constructing a
+ *     Managed Portfolio. Controllers call this service to guarantee that every
+ *     Managed Portfolio begins with a consistent, pre-configured investment set.
+ ***************************************************************************************/
+
 namespace InvestmentApp.Services
 {
     public class ManagedPortfolioService

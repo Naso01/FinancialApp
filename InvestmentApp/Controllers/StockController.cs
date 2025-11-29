@@ -8,8 +8,29 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Hosting;
 
+/***************************************************************************************
+ * Author: Keegan Erdis
+ * Description:
+ *     Controller responsible for all stock-related operations within the InvestmentApp
+ *     system. This includes:
+ *
+ *       • Displaying a user's portfolios with real-time stock prices
+ *       • Searching for stocks using the Finnhub API and syncing results to the database
+ *       • Buying stocks from both the search page and the portfolio view
+ *       • Selling stock holdings and updating user account balances
+ *       • Ensuring portfolio consistency by updating prices, quantities, and averages
+ *       • Rendering price-history charts for individual stocks
+ *
+ *     The StockController acts as the primary integration point between:
+ *       - The StockService (Finnhub API interaction)
+ *       - The Entity Framework Core data layer
+ *       - Portfolio and ChequingAccount models
+ *
+ *     Its responsibilities include fetching live quotes, maintaining accurate holdings,
+ *     enforcing user authentication, and keeping the UI updated with real-time values.
+ ***************************************************************************************/
 
-// Keegan Erdis
+
 namespace InvestmentApp.Controllers
 {
     public class StockController : Controller

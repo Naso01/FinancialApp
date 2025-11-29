@@ -1,4 +1,20 @@
-﻿namespace InvestmentApp.Models
+﻿/***************************************************************************************
+ * Author: Keegan Erdis
+ * Description:
+ *     Provides database seeding functionality for the InvestmentApp system. The
+ *     DbInitializer ensures that the database is created and pre-populated with
+ *     essential data for testing or initial deployment, including:
+ *
+ *       • Sample users with initial ChequingAccount balances
+ *       • Automatically generated Self-Directed portfolios for each user
+ *       • Sample stock entries with symbols and company names
+ *
+ *     This class helps set up a consistent starting state for development or demo
+ *     environments, allowing the system to operate immediately without requiring
+ *     manual database entry. It is typically called during application startup.
+ ***************************************************************************************/
+
+namespace InvestmentApp.Models
 {
     public class DbInitializer
     {

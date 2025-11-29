@@ -1,5 +1,30 @@
 ﻿@model List<InvestmentApp.Models.Stock>
 @{
+    /***************************************************************************************
+         * Author: Keegan Erdis
+         * Description:
+         *     Razor view for searching and purchasing stocks within the InvestmentApp
+         *     system. The view provides:
+         *
+         *       • A search form for users to enter stock symbols or company names
+         *       • Displays search results returned from the StockController via Finnhub API
+         *       • Shows stock symbol, company name, and current price for each result
+         *       • Buy forms for users to purchase stocks directly into their first portfolio
+         *       • Integration with the 30-day stock price chart functionality
+         *
+         *     The view expects:
+         *       - A model of type List<Stock> representing the stocks found in the search
+         *       - ViewBag.User to identify the current logged-in user
+         *       - ViewBag.Results to display the stocks returned from the search
+         *
+         *     This page is tightly integrated with StockController actions:
+         *       - Search (GET/POST) for querying stocks
+         *       - BuyFromSearch for purchasing stocks
+         *       - Chart for rendering historical stock data
+         ***************************************************************************************/
+
+}
+@{
     var user = ViewBag.User as InvestmentApp.Models.User;
     var results = ViewBag.Results as List<InvestmentApp.Models.Stock>;
 }

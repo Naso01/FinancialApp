@@ -6,7 +6,24 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 
-// Keegan Erdis
+/***************************************************************************************
+ * Author: Keegan Erdis
+ * Description:
+ *     Provides all stock-related data-fetching capabilities for the InvestmentApp
+ *     system by integrating directly with the Finnhub stock market API. This service
+ *     acts as the single source of truth for:
+ *
+ *       • Fetching real-time stock quotes
+ *       • Searching the Finnhub symbol database for matching companies
+ *       • Retrieving descriptive stock details (symbol, company name, type)
+ *       • Loading historical candle data used for price-trend charting
+ *
+ *     The StockService enables the controllers to access live market data without
+ *     directly performing HTTP calls, ensuring a clean separation between business
+ *     logic and external API communication. All responses are mapped into lightweight
+ *     domain models (StockQuote, StockDetails, HistoricalCandle) to keep the system
+ *     consistent and easy to consume.
+ ***************************************************************************************/
 
 namespace InvestmentApp.Models
 {

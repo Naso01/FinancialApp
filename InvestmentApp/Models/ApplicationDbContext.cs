@@ -1,5 +1,27 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
+/***************************************************************************************
+ * Author: Keegan Erdis
+ * Description:
+ *     Represents the primary Entity Framework Core database context for the
+ *     InvestmentApp system. This context coordinates all database interactions
+ *     related to:
+ *
+ *       • Users, their associated Chequing and Savings accounts
+ *       • Investment portfolios and their holdings
+ *       • Stored stock metadata
+ *       • Admin-generated recommendations
+ *
+ *     The ApplicationDbContext configures:
+ *       - Decimal precision for financial fields (balances, quantities, prices)
+ *       - Entity relationships (1:1 User–ChequingAccount, portfolio relations)
+ *       - Unique indexes (e.g., stock symbols)
+ *       - Primary keys and table mappings
+ *
+ *     This class provides a structured and centralized point for database schema
+ *     definition, ensuring consistency and integrity throughout the application.
+ ***************************************************************************************/
+
 
 namespace InvestmentApp.Models
 {
