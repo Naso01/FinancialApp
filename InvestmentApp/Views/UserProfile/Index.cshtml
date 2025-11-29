@@ -2,21 +2,51 @@
     ***************************************************************************************
      Author: Nathan Serrano
      Description:
-         This view displays the logged-in user’s profile information. It retrieves
-         user data from the controller and shows details such as name and email.
-         The page also provides navigation options for editing or deleting the profile.
+         This view displays the logged-in user’s profile information in a clean,
+         modern layout using Bootstrap card styling. It presents key account details
+         and provides buttons for editing or deleting the profile.
     ***************************************************************************************
 *@
 
 @model User
 
-<h2>Your User Profile</h2>
+<div class="container mt-5" style="max-width: 700px;">
+    <div class="card shadow-lg border-0 rounded-3">
+        <div class="card-header bg-primary text-white text-center py-3">
+            <h3 class="mb-0">Your Profile</h3>
+        </div>
 
-<table class="table">
-    <tr><th>First Name</th><td>@Model.FirstName</td></tr>
-    <tr><th>Last Name</th><td>@Model.LastName</td></tr>
-    <tr><th>Email</th><td>@Model.Email</td></tr>
-</table>
+        <div class="card-body px-4 py-4">
 
-<a asp-action="Edit" class="btn btn-primary">Edit Account</a>
-<a asp-action="Delete" class="btn btn-danger">Delete Account</a>
+            <!-- User Details -->
+            <table class="table table-borderless mb-4">
+                <tbody>
+                    <tr>
+                        <th class="text-muted">First Name</th>
+                        <td>@Model.FirstName</td>
+                    </tr>
+                    <tr>
+                        <th class="text-muted">Last Name</th>
+                        <td>@Model.LastName</td>
+                    </tr>
+                    <tr>
+                        <th class="text-muted">Email</th>
+                        <td>@Model.Email</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- Action Buttons -->
+            <div class="d-flex justify-content-between">
+                <a asp-action="Edit" class="btn btn-primary px-4">
+                    <i class="bi bi-pencil-square me-1"></i> Edit Account
+                </a>
+
+                <a asp-action="Delete" class="btn btn-danger px-4">
+                    <i class="bi bi-trash me-1"></i> Delete Account
+                </a>
+            </div>
+
+        </div>
+    </div>
+</div>
