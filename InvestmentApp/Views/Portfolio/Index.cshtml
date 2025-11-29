@@ -1,7 +1,23 @@
-﻿@model List<InvestmentApp.Models.Portfolio>
+﻿@*
+    ***************************************************************************************
+     Author: Hanjia Li
+     Description:
+         This view displays all portfolios belonging to a specific user. It allows the user
+         to:
+           - View portfolio name, type, and creation date
+           - Create a new portfolio
+           - Navigate to stock search for a selected portfolio
+           - Edit an existing portfolio
+           - Delete a portfolio
+         
+         Data is passed from the PortfolioController using a List<Portfolio> model and
+         userId is provided through ViewBag.
+    ***************************************************************************************
+*@
+@model List<InvestmentApp.Models.Portfolio>
 
 @{
-    int userId = ViewBag.UserId;  // <── pull it once at the top
+    int userId = ViewBag.UserId;
 }
 
 <h2>Your Portfolios</h2>
@@ -57,6 +73,5 @@
         </td>
     </tr>
 }
-</tbody>
-
+    </tbody>
 </table>

@@ -1,4 +1,16 @@
-﻿@{
+﻿@*
+    ***************************************************************************************
+     Author: Hanjia Li
+     Description:
+         This view allows a user to create a new portfolio. It includes:
+           - A form to enter the portfolio name
+           - A selection between Self-Directed or Managed portfolio types
+           - Error display for invalid/duplicate portfolio creation attempts
+         
+         The form posts back to PortfolioController.Create with the user's ID.
+    ***************************************************************************************
+*@
+@{
     int userId = ViewBag.UserId;
 }
 
