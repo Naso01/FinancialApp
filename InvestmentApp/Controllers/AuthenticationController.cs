@@ -45,7 +45,7 @@ namespace InvestmentApp.Controllers
                 return View();
             }
 
-            if (user.Password != password)
+            if (user.Password.Trim() != password.Trim())
             {
                 ViewBag.Error = "Incorrect password.";
                 ViewBag.ShowSignup = true;
@@ -55,7 +55,8 @@ namespace InvestmentApp.Controllers
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
-                new Claim(ClaimTypes.Name, user.Email)
+                new Claim(ClaimTypes.Name, user.Email),
+                new Claim(ClaimTypes.Email, user.Email)
             };
 
             var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
@@ -107,6 +108,7 @@ namespace InvestmentApp.Controllers
             }
 
             // Save user
+            newUser.Password = newUser.Password.Trim();
             _context.Users.Add(newUser);
             _context.SaveChanges();
 
@@ -114,7 +116,7 @@ namespace InvestmentApp.Controllers
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, newUser.UserId.ToString()),
-                new Claim(ClaimTypes.Name, newUser.FirstName),
+                new Claim(ClaimTypes.Name, newUser.Email),
                 new Claim(ClaimTypes.Email, newUser.Email)
             };
 
