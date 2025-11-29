@@ -1,4 +1,16 @@
-﻿@{
+﻿@*
+    ***************************************************************************************
+     Author: Nathan Serrano
+     File: Chart.cshtml
+     Description:
+         This view is responsible for displaying financial or stock-related data
+         in a visual chart format. It typically receives dynamic data from the
+         controller and uses JavaScript charting libraries or HTML canvas to render
+         interactive graphs for the user.
+    ***************************************************************************************
+*@
+
+@{
     var prices = ViewBag.Prices as List<decimal>;
     var timestamps = ViewBag.Timestamps as List<long>;
 }
