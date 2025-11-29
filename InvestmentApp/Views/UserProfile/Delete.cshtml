@@ -1,4 +1,14 @@
-﻿<h2>Are you sure you want to delete your account?</h2>
+﻿@*
+    ***************************************************************************************
+     Author: Nathan Serrano
+     Description:
+         This view displays a confirmation page for deleting the user’s account.
+         It warns the user about permanent deletion and posts the final confirmation
+         to the UserProfileController’s DeleteConfirmed action.
+    ***************************************************************************************
+*@
+
+<h2>Are you sure you want to delete your account?</h2>
 
 <form method="post" asp-action="DeleteConfirmed">
     <button class="btn btn-danger">Yes, Delete My Profile</button>

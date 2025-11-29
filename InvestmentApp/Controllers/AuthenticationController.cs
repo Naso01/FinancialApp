@@ -4,6 +4,17 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
+/***************************************************************************************
+ * Author: Nathan Serrano
+ * Description:
+ *     This controller manages all authentication-related actions within the 
+ *     InvestmentApp system. Its responsibilities include logging users in,
+ *     logging them out, signing new users up, and creating authentication cookies 
+ *     that maintain the logged-in session. It interacts directly with the database 
+ *     to validate credentials and uses cookie-based authentication to manage user 
+ *     identity across the application.
+ ***************************************************************************************/
+
 namespace InvestmentApp.Controllers
 {
     public class AuthenticationController : Controller
@@ -15,13 +26,13 @@ namespace InvestmentApp.Controllers
             _context = context;
         }
 
-        // GET: Login page
+        // GET: Displays the login page
         public IActionResult Login()
         {
             return View();
         }
 
-        // POST: Process login
+        // POST: Verifies login credentials and authenticates the user
         [HttpPost]
         public async Task<IActionResult> Login(string email, string password)
         {
@@ -63,18 +74,21 @@ namespace InvestmentApp.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        // Logs the user out by clearing the authentication cookie
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction("Login");
         }
 
+        // GET: Displays signup form
         [HttpGet]
         public IActionResult SignUp()
         {
             return View();
         }
 
+        // POST: Creates a new user account and logs the user in automatically
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> SignUp(User newUser)

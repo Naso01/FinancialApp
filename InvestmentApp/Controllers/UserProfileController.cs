@@ -3,6 +3,16 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
+/***************************************************************************************
+ * Author: Nathan Serrano
+ * Description:
+ *     This controller manages all user profile–related functionality within the
+ *     InvestmentApp system. It allows authenticated users to view, edit, and delete
+ *     their profile information. The controller ensures secure access by requiring
+ *     user authentication and retrieves user data through claims-based identity.
+ ***************************************************************************************/
+
+
 namespace InvestmentApp.Controllers
 {
     [Authorize]
@@ -10,11 +20,13 @@ namespace InvestmentApp.Controllers
     {
         private readonly ApplicationDbContext _context;
 
+        // Injects the application database context into the controller
         public UserProfileController(ApplicationDbContext context)
         {
             _context = context;
         }
 
+        // GET: Displays the user’s profile information
         public IActionResult Index()
         {
             var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
@@ -22,6 +34,7 @@ namespace InvestmentApp.Controllers
             return View(user);
         }
 
+        // GET: Displays the edit profile form populated with the user's data
         public IActionResult Edit()
         {
             var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
@@ -29,6 +42,7 @@ namespace InvestmentApp.Controllers
             return View(user);
         }
 
+        // POST: Saves the edited profile information back to the database
         [HttpPost]
         public IActionResult Edit(User updated)
         {
@@ -47,11 +61,13 @@ namespace InvestmentApp.Controllers
             return RedirectToAction("Index");
         }
 
+        // GET: Displays a confirmation screen for account deletion
         public IActionResult Delete()
         {
             return View();
         }
 
+        // POST: Permanently deletes the user's account from the database
         [HttpPost]
         public IActionResult DeleteConfirmed()
         {
