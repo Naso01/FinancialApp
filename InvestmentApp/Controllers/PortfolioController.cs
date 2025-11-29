@@ -2,15 +2,32 @@
 using Microsoft.EntityFrameworkCore;
 using InvestmentApp.Models;
 
+/***************************************************************************************
+ * Author: Hanjia Li
+ * Description:
+ *     This controller manages all portfolio-related functionality for users within the
+ *     InvestmentApp system. It allows authenticated users to:
+ *     - View their existing portfolios and holdings
+ *     - Create new portfolios (Managed or Self-Directed)
+ *     - Edit portfolio type and optionally transfer funds
+ *     - Delete entire portfolios and their holdings
+ *
+ *     All portfolio data is tied to a specific user. This controller ensures that
+ *     portfolios are retrieved, modified, and removed securely and consistently by
+ *     using Entity Framework relationships and eager loading where necessary.
+ ***************************************************************************************/
+
 public class PortfolioController : Controller
 {
     private readonly ApplicationDbContext _context;
 
+    // Injects database context into the controller
     public PortfolioController(ApplicationDbContext context)
     {
         _context = context;
     }
 
+    // GET: Displays all portfolios for a specific user
     public async Task<IActionResult> Index(int userId)
     {
         var user = await _context.Users
@@ -20,11 +37,14 @@ public class PortfolioController : Controller
             .Include(u => u.ChequingAccount)
             .FirstOrDefaultAsync(u => u.UserId == userId);
 
-        if (user == null) return NotFound();
+        if (user == null)
+            return NotFound();
 
         ViewBag.UserId = userId;
         return View(user.Portfolios);
     }
+
+    // GET: Displays form to create a new portfolio
     public async Task<IActionResult> Create(int userId)
     {
         var hasManaged = await _context.Portfolios
@@ -32,9 +52,11 @@ public class PortfolioController : Controller
 
         ViewBag.UserId = userId;
         ViewBag.HasManagedPortfolio = hasManaged;
+
         return View();
     }
 
+    // POST: Creates a new portfolio and associates it with a user
     [HttpPost]
     public async Task<IActionResult> Create(int userId, string name, PortfolioType type)
     {
@@ -51,7 +73,8 @@ public class PortfolioController : Controller
         if (user == null)
             return NotFound();
 
-        if (type == PortfolioType.Managed && user.Portfolios.Any(p=> p.PortfolioType == PortfolioType.Managed))
+        // Ensure user only has one Managed Portfolio
+        if (type == PortfolioType.Managed && user.Portfolios.Any(p => p.PortfolioType == PortfolioType.Managed))
         {
             TempData["Error"] = "User already has a Managed Portfolio.";
             return RedirectToAction("Create", new { userId });
@@ -68,18 +91,21 @@ public class PortfolioController : Controller
         user.Portfolios.Add(portfolio);
         await _context.SaveChangesAsync();
 
-        return RedirectToAction("Index", new { userId = userId });
+        return RedirectToAction("Index", new { userId });
     }
 
-
+    // GET: Displays the edit form for a portfolio
     public async Task<IActionResult> Edit(int id)
     {
         var portfolio = await _context.Portfolios.FindAsync(id);
-        if (portfolio == null) return NotFound();
+
+        if (portfolio == null)
+            return NotFound();
 
         return View(portfolio);
     }
 
+    // POST: Applies edits to a portfolio, optionally transferring funds
     [HttpPost]
     public async Task<IActionResult> Edit(int id, PortfolioType type, decimal amount)
     {
@@ -88,12 +114,13 @@ public class PortfolioController : Controller
                 .ThenInclude(u => u.ChequingAccount)
             .FirstOrDefaultAsync(p => p.PortfolioId == id);
 
-        if (portfolio == null) return NotFound();
+        if (portfolio == null)
+            return NotFound();
 
-        // update data
+        // Update portfolio type
         portfolio.PortfolioType = type;
 
-        // transfer funds if amount > 0
+        // Transfer funds from chequing into portfolio (if amount > 0)
         if (amount > 0)
         {
             if (portfolio.User.ChequingAccount.Balance < amount)
@@ -107,19 +134,19 @@ public class PortfolioController : Controller
         return RedirectToAction("Index", new { userId = portfolio.UserId });
     }
 
-
+    // POST: Deletes a portfolio and its associated holdings
     public async Task<IActionResult> Delete(int id)
     {
         var portfolio = await _context.Portfolios
             .Include(p => p.Holdings)
             .FirstOrDefaultAsync(p => p.PortfolioId == id);
 
-        if (portfolio == null) return NotFound();
+        if (portfolio == null)
+            return NotFound();
 
-        // delete holdings first
         _context.PortfolioHoldings.RemoveRange(portfolio.Holdings);
-
         _context.Portfolios.Remove(portfolio);
+
         await _context.SaveChangesAsync();
 
         return RedirectToAction("Index", new { userId = portfolio.UserId });
@@ -139,7 +166,6 @@ public class PortfolioController : Controller
 
         return RedirectToAction("Index", new { userId });
     }
-
 
     [HttpPost]
     public async Task<IActionResult> WithdrawFunds(int userId, decimal amount)
