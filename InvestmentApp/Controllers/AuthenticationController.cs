@@ -26,17 +26,17 @@ namespace InvestmentApp.Controllers
             _context = context;
         }
 
-        // GET: Displays the login page
+        // GET: Login page
         public IActionResult Login()
         {
             return View();
         }
 
-        // POST: Verifies login credentials and authenticates the user
+        // POST: Process login
         [HttpPost]
-        public async Task<IActionResult> Login(string email, string password)
+        public async Task<IActionResult> Login(string username, string password)
         {
-            var user = _context.Users.FirstOrDefault(u => u.Email == email);
+            var user = _context.Users.FirstOrDefault(u => u.Email == username);
 
             if (user == null)
             {
@@ -51,80 +51,67 @@ namespace InvestmentApp.Controllers
                 ViewBag.ShowSignup = true;
                 return View();
             }
-
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
                 new Claim(ClaimTypes.Name, user.Email)
             };
 
-            var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            var identity = new ClaimsIdentity(
+                claims,
+                "Cookies"
+            );
+
             var principal = new ClaimsPrincipal(identity);
 
             await HttpContext.SignInAsync(
-                CookieAuthenticationDefaults.AuthenticationScheme,
-                principal,
-                new AuthenticationProperties
-                {
-                    IsPersistent = true,
-                    ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(30)
-                }
+                "Cookies",
+                    principal,
+                    new AuthenticationProperties
+                    {
+
+                        IsPersistent = true,
+                        ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(30)
+                    }
             );
 
             return RedirectToAction("Index", "Home");
         }
 
-        // Logs the user out by clearing the authentication cookie
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction("Login");
         }
 
-        // GET: Displays signup form
         [HttpGet]
         public IActionResult SignUp()
         {
             return View();
         }
 
-        // POST: Creates a new user account and logs the user in automatically
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> SignUp(User newUser)
+        public IActionResult SignUp(string firstName, string lastName, string email, string password)
         {
-            if (!ModelState.IsValid)
+            var existing = _context.Users.FirstOrDefault(u => u.Email == email);
+            if (existing != null)
             {
-                return View(newUser);
+                ViewBag.Error = "An account with this email already exists.";
+                return View();
             }
 
-            // Check if email already exists
-            var existingUser = _context.Users.FirstOrDefault(u => u.Email == newUser.Email);
-            if (existingUser != null)
+            var user = new User
             {
-                ViewBag.Error = "Email already exists!";
-                return View(newUser);
-            }
-
-            // Save user
-            _context.Users.Add(newUser);
-            _context.SaveChanges();
-
-            // Auto-login
-            var claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.NameIdentifier, newUser.UserId.ToString()),
-                new Claim(ClaimTypes.Name, newUser.FirstName),
-                new Claim(ClaimTypes.Email, newUser.Email)
+                FirstName = firstName,
+                LastName = lastName,
+                Email = email,
+                Password = password
             };
 
-            var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-            var principal = new ClaimsPrincipal(identity);
+            _context.Users.Add(user);
+            _context.SaveChanges();
 
-            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
-
-            // Redirect to User Profile (dashboard)
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Login");
         }
     }
 }
