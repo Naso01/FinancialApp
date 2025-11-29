@@ -1,4 +1,15 @@
-﻿<h2>Edit Portfolio</h2>
+﻿@*
+    ***************************************************************************************
+     Author: Hanjia Li
+     Description:
+         This view allows a user to edit an existing portfolio. It provides options to:
+           - Change the portfolio type (Managed or Self-Directed)
+           - Add funds to the portfolio from the user's chequing account
+         
+         The form posts back to the PortfolioController.Edit action with the updated data.
+    ***************************************************************************************
+*@
+<h2>Edit Portfolio</h2>
 
 <form method="post" asp-action="Edit">
     <input type="hidden" name="id" value="@Model.PortfolioId" />
