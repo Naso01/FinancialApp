@@ -68,7 +68,36 @@ namespace InvestmentApp.Models
 
             return response?.Result ?? new List<FinnhubStock>();
         }
+
+        //Nathan Serrano -------------------------
+        //Get Stock Candles
+        public async Task<HistoricalCandle> GetHistoricalCandlesAsync(string symbol, long from, long to)
+        {
+            var url = $"https://finnhub.io/api/v1/stock/candle?symbol={symbol}&resolution=D&from={from}&to={to}&token={_apiKey}";
+
+            var json = await _httpClient.GetStringAsync(url);
+            var data = JObject.Parse(json);
+
+            if (data["s"]?.ToString() != "ok")
+                return null;
+
+            return new HistoricalCandle
+            {
+                ClosePrices = data["c"].Select(v => (decimal)v).ToList(),
+                Timestamps = data["t"].Select(v => (long)v).ToList()
+            };
+        }
+        //Nathan Serrano -------------------------
     }
+    //Nathan Serrano -------------------------
+    public class HistoricalCandle
+        {
+            public List<decimal> ClosePrices { get; set; }
+            public List<long> Timestamps { get; set; }    
+    }
+    //Nathan Serrano -------------------------
+
+
 
     // Additional Models
     public class StockQuote
